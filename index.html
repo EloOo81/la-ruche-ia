@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>La Ruche IA – Vos agents IA : sécurité, e-mails, traduction, réseaux, informatique</title>
-<meta name="description" content="Protégez-vous, simplifiez-vous la vie avec vos agents IA : Clarisse, Hugo, Lina, Léo et Camille.">
+<meta name="description" content="Protégez-vous, simplifiez-vous la vie avec vos agents IA : Clarisse, Hugo, Lina, Léo, Camille et Théo.">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#070b1a">
 <style>
@@ -137,7 +137,7 @@ La Ruche IA
 </section>
 
 <section id="agents" aria-labelledby="t-agents">
-<h2 id="t-agents">Une ruche, cinq agents</h2>
+<h2 id="t-agents">Une ruche, six agents</h2>
 <p class="sous">Chaque agent a un métier. Cliquez sur une carte pour lui parler.</p>
 <div class="grille" id="grille"></div>
 </section>
@@ -168,35 +168,41 @@ La Ruche IA
 /* Pour mettre un agent en ligne : remplacer null par l'adresse de son Worker. */
 var AGENTS=[
 {id:"clarisse",nom:"Clarisse",emoji:"🛡️",metier:"Sécurité",role:"Agente de sécurité",
- desc:"Arnaques, mots de passe, double vérification, comptes piratés.",
+ desc:"Elle analyse un SMS, un e-mail ou une capture d'écran suspects et vous dit si c'est une arnaque. Elle vous aide aussi si votre compte est piraté.",
  url:"https://clarisse-ia.studio-code.workers.dev/",
  accueil:"Bonjour, je suis Clarisse. Collez ici un message qui vous paraît louche, ou posez-moi une question de sécurité. Je ne vous demanderai jamais de mot de passe, de code ou de numéro de carte.",
  invite:"Collez ici le message suspect…",
  idees:["Colissimo : colis bloqué, payez 1,99 € de frais","Mon compte a été piraté, que faire ?","Comment créer un mot de passe solide ?"]},
 {id:"hugo",nom:"Hugo",emoji:"✉️",metier:"Secrétaire",role:"Secrétaire virtuel",
- desc:"E-mails, relances, résumés, corrections et organisation.",
+ desc:"Il rédige vos e-mails et courriers, relance un devis, résume un long message et corrige vos fautes. Vous relisez et envoyez.",
  url:"https://clarisse-ia.studio-code.workers.dev/hugo",
  accueil:"Bonjour, je suis Hugo, votre secrétaire virtuel. Collez un e-mail à traiter ou dites-moi ce qu'il faut relancer, et je prépare le texte. C'est vous qui relisez et envoyez.",
  invite:"Collez un e-mail ou décrivez ce qu'il faut rédiger…",
  idees:["Relancer un devis resté sans réponse","Répondre poliment à un client mécontent","Corriger les fautes de mon texte"]},
 {id:"lina",nom:"Lina",emoji:"🌍",metier:"Traduction",role:"Traduction et adaptation culturelle",
- desc:"Traduit vos textes et les adapte au pays et au public visés.",
+ desc:"Elle traduit vos textes et les adapte à la culture et au public du pays visé. Pour un document officiel, il faut un traducteur assermenté.",
  url:"https://clarisse-ia.studio-code.workers.dev/lina",
  accueil:"Bonjour, je suis Lina. Donnez-moi votre texte, la langue et le pays visés, et je le traduis en l'adaptant à votre public. Pour un document officiel, il faudra un traducteur assermenté.",
  invite:"Collez le texte à traduire et indiquez la langue visée…",
  idees:["Traduire ma présentation en anglais","Écrire à un client en Espagne","Adapter mon texte pour un public allemand"]},
 {id:"leo",nom:"Léo",emoji:"📱",metier:"Réseaux sociaux",role:"Réseaux sociaux",
- desc:"Publications, vidéos TikTok, hashtags et calendrier simple.",
+ desc:"Il écrit vos publications Facebook, Instagram, Google Business et TikTok, avec hashtags et idées de vidéos. Vous publiez vous-même.",
  url:"https://clarisse-ia.studio-code.workers.dev/leo",
  accueil:"Salut, je suis Léo ! Dites-moi votre métier, votre ville et le réseau visé, et je prépare une publication ou un script de vidéo. C'est vous qui publiez.",
  invite:"Votre métier, votre ville, le réseau visé…",
  idees:["Une publication pour mon chantier terminé","Une idée de vidéo TikTok pour mon métier","Un calendrier simple pour la semaine"]},
 {id:"camille",nom:"Camille",emoji:"💻",metier:"Informatique",role:"Assistante web et informatique",
- desc:"Dépannage simple et bases d'un site web, pas à pas.",
+ desc:"Elle vous guide pas à pas pour un souci de téléphone, d'ordinateur, de box ou d'imprimante, et rédige de courts textes pour un site web.",
  url:"https://clarisse-ia.studio-code.workers.dev/camille",
  accueil:"Bonjour, je suis Camille. Dites-moi quel appareil vous utilisez et ce qui ne va pas, et je vous guide pas à pas. Je ne vois pas votre écran : décrivez-moi ce que vous voyez.",
  invite:"Décrivez votre problème et votre appareil…",
- idees:["Mon wifi coupe tout le temps","Mon téléphone n'a plus de place","C'est quoi un nom de domaine ?"]}
+ idees:["Mon wifi coupe tout le temps","Mon téléphone n'a plus de place","C'est quoi un nom de domaine ?"]},
+{id:"theo",nom:"Théo",emoji:"🎓",metier:"Orientation & carrière",role:"Orientation et carrière",
+ desc:"Il vous aide à écrire un CV et une lettre de motivation, à préparer un entretien, à améliorer LinkedIn et à trouver votre voie.",
+ url:"https://clarisse-ia.studio-code.workers.dev/theo",
+ accueil:"Bonjour, je suis Théo. Je vous aide à écrire votre CV ou votre lettre, à préparer un entretien, à analyser une offre ou à trouver une piste de métier. Je ne vois pas les offres en ligne : collez le texte de celle qui vous intéresse.",
+ invite:"Dites-moi ce que vous cherchez : CV, lettre, entretien, orientation…",
+ idees:["Faire mon CV étape par étape","M'entraîner à un entretien d'embauche","Quel métier pourrait me convenir ?"]}
 ];
 var courant=AGENTS[0], hist={}, enCours=false, image=null;
 AGENTS.forEach(function(a){hist[a.id]=[];});
