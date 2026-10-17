@@ -186,7 +186,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-bet
   var fil=document.getElementById("fil"), form=document.getElementById("form");
   var texte=document.getElementById("texte"), btn=document.getElementById("envoyer");
   var nb=document.getElementById("nb"), idees=document.getElementById("idees");
-  var enCours=false;
+  var enCours=false, hist=[];
   var synth=window.speechSynthesis, voixOn=false, voixChoisie=null, bv=document.getElementById("voix");
   
   function choisirVoix(){
@@ -249,11 +249,11 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-bet
     try{
       var ctrl=new AbortController();
       var t=setTimeout(function(){ctrl.abort();},30000);
-      var r=await fetch(URL_CLARISSE,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:message}),signal:ctrl.signal});
+      var r=await fetch(URL_CLARISSE,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:message,historique:hist.slice(-6)}),signal:ctrl.signal});
       clearTimeout(t);
       var j=await r.json().catch(function(){return {};});
       attente.remove();
-      if(r.ok&&j.reply){ ajouter("clarisse",nettoyer(j.reply)); parler(j.reply); }
+      if(r.ok&&j.reply){ ajouter("clarisse",nettoyer(j.reply)); hist.push({r:"u",t:message},{r:"c",t:j.reply}); parler(j.reply); }
       else if(r.status===429){ ajouter("clarisse erreur","Trop de messages d'un coup. Patientez une minute puis réessayez."); }
       else if(r.status===413){ ajouter("clarisse erreur","Votre message est trop long (1500 caractères maximum). Collez seulement l'essentiel."); }
       else{ ajouter("clarisse erreur","Je suis momentanément indisponible. Réessayez dans un instant."); }
