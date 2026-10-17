@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maquette - Hugo et mon agenda</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(circle at 20% 0%,#1b2a6b 0%,#0a0f2c 55%);color:#eaf0ff;font-family:system-ui,sans-serif;display:flex;justify-content:center;padding:24px 16px}
+.carte{width:100%;max-width:460px}
+.entete{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.avatar{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#a855f7,#ec4899);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:24px;color:#0a0f2c}
+h1{font-size:22px;margin:0}
+.sous{opacity:.7;font-size:14px}
+.bloc{background:rgba(255,255,255,.06);border:1px solid rgba(34,211,238,.35);border-radius:18px;padding:20px;margin-bottom:16px;backdrop-filter:blur(6px)}
+.bloc h2{margin:0 0 10px;font-size:17px}
+ul{padding-left:0;list-style:none;margin:10px 0}
+li{padding:6px 0;font-size:15px}
+.ok{color:#22d3ee}.non{color:#ec4899}
+.btn{display:block;width:100%;padding:15px;border:0;border-radius:14px;background:linear-gradient(90deg,#22d3ee,#a855f7);color:#0a0f2c;font-weight:700;font-size:16px;cursor:pointer}
+.btn:hover{filter:brightness(1.1)}
+.lien{display:block;text-align:center;margin-top:12px;font-size:13px;opacity:.7;color:#eaf0ff}
+.msg{display:none;margin-top:14px;padding:12px;border-radius:12px;background:rgba(34,211,238,.12);font-size:14px}
+.event{display:flex;gap:12px;padding:10px 0;border-top:1px solid rgba(255,255,255,.1)}
+.heure{color:#22d3ee;font-weight:700;min-width:54px}
+.note{font-size:12px;opacity:.6;text-align:center;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="carte">
+  <div class="entete">
+    <div class="avatar">H</div>
+    <div><h1>Hugo</h1><div class="sous">Votre secrétaire virtuel</div></div>
+  </div>
+
+  <div class="bloc" id="avant">
+    <h2>Connecter mon agenda</h2>
+    <div class="sous">Hugo pourra vous rappeler vos rendez-vous et préparer le point de la journée.</div>
+    <ul>
+      <li><span class="ok">&#10003;</span> Il lit seulement votre agenda</li>
+      <li><span class="non">&#10007;</span> Il ne peut rien modifier ni supprimer</li>
+      <li><span class="non">&#10007;</span> Il n'envoie aucun message à votre place</li>
+      <li><span class="ok">&#10003;</span> Vous pouvez retirer l'accès quand vous voulez</li>
+    </ul>
+    <button class="btn" onclick="connecter()">Connecter mon agenda Google</button>
+    <a class="lien" href="#">Pourquoi cette autorisation ?</a>
+  </div>
+
+  <div class="bloc" id="apres" style="display:none">
+    <h2>Agenda connecté <span class="ok">&#10003;</span></h2>
+    <div class="sous">Voici le point du jour préparé par Hugo (exemple) :</div>
+    <div class="event"><div class="heure">09:00</div><div>Rendez-vous client, appel</div></div>
+    <div class="event"><div class="heure">14:30</div><div>Relancer le devis en attente</div></div>
+    <div class="event"><div class="heure">18:00</div><div>Bilan de la semaine</div></div>
+    <button class="btn" style="margin-top:14px;background:rgba(255,255,255,.1);color:#eaf0ff" onclick="deconnecter()">Retirer l'accès</button>
+  </div>
+
+  <div class="note">Maquette d'exemple : rien n'est réellement connecté.</div>
+</div>
+<script>
+function connecter(){document.getElementById('avant').style.display='none';document.getElementById('apres').style.display='block'}
+function deconnecter(){document.getElementById('apres').style.display='none';document.getElementById('avant').style.display='block'}
+</script>
+</body>
+</html>
