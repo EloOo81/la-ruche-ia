@@ -58,6 +58,8 @@ h2{font-size:clamp(1.5rem,4vw,2.1rem);margin-bottom:8px;letter-spacing:-.01em}
 .visage{width:52px;height:52px;flex:none}
 .chat-tete b{display:block;font-size:1.05rem}
 .chat-tete small{color:var(--menthe)}
+.voix{margin-left:auto;font:inherit;font-size:.85rem;color:var(--doux);background:transparent;border:1px solid var(--trait);border-radius:99px;padding:8px 14px;cursor:pointer;white-space:nowrap}
+.voix[aria-pressed=true]{color:#2a0a1a;background:var(--menthe);border-color:var(--menthe);font-weight:700}
 .fil{height:min(52vh,430px);overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:12px;scroll-behavior:smooth}
 .msg{max-width:88%;padding:12px 16px;border-radius:16px;white-space:pre-wrap;word-wrap:break-word;font-size:.98rem}
 .msg.clarisse{background:#182050;border:1px solid var(--trait);border-top-left-radius:4px;align-self:flex-start}
@@ -123,6 +125,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-bet
         <div class="chat-tete">
           <svg class="visage" viewBox="0 0 60 60" aria-hidden="true"><defs><linearGradient id="v" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff5fa2"/><stop offset="1" stop-color="#3de8ff"/></linearGradient></defs><path d="M30 2l24 14v28L30 58 6 44V16z" fill="url(#v)"/><circle cx="30" cy="26" r="9" fill="#070b1a"/><path d="M14 46c2-9 9-13 16-13s14 4 16 13" fill="#070b1a"/></svg>
           <div><b>Clarisse</b><small>En ligne · agente de sécurité</small></div>
+          <button type="button" class="voix" id="voix" aria-pressed="false" title="Faire parler Clarisse">🔊 Voix : non</button>
         </div>
         <div class="fil" id="fil" role="log" aria-live="polite">
           <div class="msg clarisse">Bonjour, je suis Clarisse. Collez ici un message qui vous paraît louche, ou posez-moi une question de sécurité. Je ne vous demanderai jamais de mot de passe, de code ou de numéro de carte.</div>
@@ -181,6 +184,29 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-bet
   var texte=document.getElementById("texte"), btn=document.getElementById("envoyer");
   var nb=document.getElementById("nb"), idees=document.getElementById("idees");
   var enCours=false;
+  var synth=window.speechSynthesis, voixOn=false, voixChoisie=null, bv=document.getElementById("voix");
+  if(!synth){ bv.style.display="none"; }
+  function choisirVoix(){
+    if(!synth) return;
+    var l=synth.getVoices().filter(function(v){return /^fr/i.test(v.lang);});
+    var fem=l.filter(function(v){return /hortense|julie|am[ée]lie|marie|denise|eloise|vivienne|female|femme|google fran/i.test(v.name)&&!/paul|thomas|henri|claude|antoine|nicolas|male /i.test(v.name);});
+    voixChoisie=fem[0]||l.filter(function(v){return !/paul|thomas|henri|claude|antoine|nicolas/i.test(v.name);})[0]||l[0]||null;
+  }
+  if(synth){ choisirVoix(); synth.onvoiceschanged=choisirVoix; }
+  function parler(t){
+    if(!synth||!voixOn) return;
+    synth.cancel();
+    var u=new SpeechSynthesisUtterance(String(t).replace(/[•*#]/g,"").replace(/\n+/g,". "));
+    u.lang="fr-FR"; if(voixChoisie) u.voice=voixChoisie;
+    u.rate=1; u.pitch=1.1; u.volume=1;
+    synth.speak(u);
+  }
+  bv.addEventListener("click",function(){
+    voixOn=!voixOn;
+    bv.setAttribute("aria-pressed",voixOn?"true":"false");
+    bv.textContent=voixOn?"🔊 Voix : oui":"🔊 Voix : non";
+    if(voixOn){ parler("Bonjour, je suis Clarisse. Je vous répondrai aussi à voix haute."); } else { synth.cancel(); }
+  });
 
   function ajouter(classe, contenu){
     var d=document.createElement("div");
@@ -210,7 +236,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-bet
       clearTimeout(t);
       var j=await r.json().catch(function(){return {};});
       attente.remove();
-      if(r.ok&&j.reply){ ajouter("clarisse",nettoyer(j.reply)); }
+      if(r.ok&&j.reply){ ajouter("clarisse",nettoyer(j.reply)); parler(j.reply); }
       else if(r.status===429){ ajouter("clarisse erreur","Trop de messages d'un coup. Patientez une minute puis réessayez."); }
       else if(r.status===413){ ajouter("clarisse erreur","Votre message est trop long (1500 caractères maximum). Collez seulement l'essentiel."); }
       else{ ajouter("clarisse erreur","Je suis momentanément indisponible. Réessayez dans un instant."); }
