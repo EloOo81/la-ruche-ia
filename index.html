@@ -77,6 +77,8 @@ textarea{flex:1;resize:none;min-height:48px;max-height:150px;font:inherit;color:
 textarea::placeholder{color:#5d6aa0}
 .saisie .btn{padding:13px 22px}
 .saisie .btn:disabled{opacity:.5;cursor:wait;transform:none}
+.micro{background:transparent;color:var(--texte);border:1px solid var(--trait);box-shadow:none}
+.micro[aria-pressed=true]{background:var(--menthe);color:#2a0a1a;border-color:var(--menthe)}
 .compteur{font-size:.78rem;color:var(--doux);padding:0 20px 12px;text-align:right}
 .avert{font-size:.84rem;color:var(--doux);margin-top:14px}
 /* Agents */
@@ -138,6 +140,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-bet
         <form class="saisie" id="form">
           <label class="sr" for="texte">Votre message</label>
           <textarea id="texte" maxlength="1500" rows="2" placeholder="Collez ici le message suspect…"></textarea>
+          <button class="btn micro" id="micro" type="button" aria-pressed="false" title="Parler au lieu d'écrire">🎤 Parler</button>
           <button class="btn" id="envoyer" type="submit">Envoyer</button>
         </form>
         <div class="compteur"><span id="nb">0</span> / 1500</div>
@@ -173,7 +176,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-bet
 <footer>
   <div class="wrap">
     <div>© La Ruche IA · Un service créé par <a href="https://studio-code.fr">Studio Code</a></div>
-    <div>Vos messages ne sont pas enregistrés par ce site. Ils sont envoyés à l'IA le temps de la réponse.</div>
+    <div>Vos messages ne sont pas enregistrés par ce site. Ils sont envoyés à l'IA le temps de la réponse. Si vous utilisez le micro, la reconnaissance vocale est assurée par votre navigateur.</div>
   </div>
 </footer>
 
@@ -259,6 +262,21 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-bet
       ajouter("clarisse erreur","Je n'arrive pas à répondre pour le moment. Vérifiez votre connexion et réessayez.");
     }
     enCours=false; btn.disabled=false; texte.focus();
+  }
+  var RA=window.SpeechRecognition||window.webkitSpeechRecognition, bm=document.getElementById("micro"), reco=null, ecoute=false;
+  if(!RA){ bm.style.display="none"; }
+  else{
+    bm.addEventListener("click",function(){
+      if(ecoute){ reco.stop(); return; }
+      arretVoix();
+      reco=new RA(); reco.lang="fr-FR"; reco.interimResults=true; reco.continuous=false;
+      var base=texte.value?texte.value.trim()+" ":"";
+      reco.onstart=function(){ ecoute=true; bm.setAttribute("aria-pressed","true"); bm.textContent="🎤 J'écoute…"; };
+      reco.onresult=function(e){ var t=""; for(var i=0;i<e.results.length;i++){ t+=e.results[i][0].transcript; } texte.value=(base+t).slice(0,1500); nb.textContent=texte.value.length; };
+      reco.onerror=function(e){ if(e.error==="not-allowed"||e.error==="service-not-allowed"){ ajouter("clarisse erreur","Le micro est bloqué. Autorisez-le dans votre navigateur pour pouvoir me parler."); } };
+      reco.onend=function(){ ecoute=false; bm.setAttribute("aria-pressed","false"); bm.textContent="🎤 Parler"; texte.focus(); };
+      try{ reco.start(); }catch(e){}
+    });
   }
   form.addEventListener("submit",function(e){e.preventDefault();envoyer(texte.value);});
   texte.addEventListener("input",function(){nb.textContent=texte.value.length;});
