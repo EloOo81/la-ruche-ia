@@ -185,7 +185,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-bet
   var nb=document.getElementById("nb"), idees=document.getElementById("idees");
   var enCours=false;
   var synth=window.speechSynthesis, voixOn=false, voixChoisie=null, bv=document.getElementById("voix");
-  if(!synth){ bv.style.display="none"; }
+  
   function choisirVoix(){
     if(!synth) return;
     var l=synth.getVoices().filter(function(v){return /^fr/i.test(v.lang);});
@@ -193,19 +193,33 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-bet
     voixChoisie=fem[0]||l.filter(function(v){return !/paul|thomas|henri|claude|antoine|nicolas/i.test(v.name);})[0]||l[0]||null;
   }
   if(synth){ choisirVoix(); synth.onvoiceschanged=choisirVoix; }
-  function parler(t){
-    if(!synth||!voixOn) return;
-    synth.cancel();
-    var u=new SpeechSynthesisUtterance(String(t).replace(/[•*#]/g,"").replace(/\n+/g,". "));
-    u.lang="fr-FR"; if(voixChoisie) u.voice=voixChoisie;
-    u.rate=1; u.pitch=1.1; u.volume=1;
-    synth.speak(u);
+  var audioCF=null, URL_VOIX="https://clarisse-ia.studio-code.workers.dev/voix";
+  function arretVoix(){ if(audioCF){audioCF.pause();audioCF=null;} if(synth) synth.cancel(); }
+  function parlerNavigateur(txt){
+    if(!synth) return;
+    var u=new SpeechSynthesisUtterance(txt); u.lang="fr-FR"; if(voixChoisie) u.voice=voixChoisie;
+    u.rate=1.15; u.pitch=1.1; synth.speak(u);
+  }
+  async function parler(t){
+    if(!voixOn) return;
+    arretVoix();
+    var txt=String(t).replace(/[•*#]/g,"").replace(/\n+/g,". ").trim();
+    if(txt.length>700){ var c=txt.slice(0,700); var i=Math.max(c.lastIndexOf(". "),c.lastIndexOf("? "),c.lastIndexOf("! ")); txt=(i>200?c.slice(0,i+1):c); }
+    try{
+      var r=await fetch(URL_VOIX,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({texte:txt})});
+      var j=await r.json();
+      if(!voixOn) return;
+      if(!j.audio) throw new Error("pas d'audio");
+      audioCF=new Audio("data:audio/mpeg;base64,"+j.audio);
+      audioCF.playbackRate=1.2; audioCF.preservesPitch=true;
+      await audioCF.play();
+    }catch(e){ if(voixOn) parlerNavigateur(txt); }
   }
   bv.addEventListener("click",function(){
     voixOn=!voixOn;
     bv.setAttribute("aria-pressed",voixOn?"true":"false");
     bv.textContent=voixOn?"🔊 Voix : oui":"🔊 Voix : non";
-    if(voixOn){ parler("Bonjour, je suis Clarisse. Je vous répondrai aussi à voix haute."); } else { synth.cancel(); }
+    if(voixOn){ parler("Bonjour, je suis Clarisse. Je vous répondrai aussi à voix haute."); } else { arretVoix(); }
   });
 
   function ajouter(classe, contenu){
