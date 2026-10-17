@@ -232,7 +232,7 @@ function arretVoix(){ if(audioCF){audioCF.pause();audioCF=null;} if(synth) synth
 function parlerNavigateur(txt){
 if(!synth) return;
 var u=new SpeechSynthesisUtterance(txt); u.lang="fr-FR"; if(voixChoisie) u.voice=voixChoisie;
-u.rate=1.15; u.pitch=1.1; synth.speak(u);
+u.rate=1; u.pitch=1; synth.speak(u);
 }
 async function parler(t){
 if(!voixOn) return;
@@ -245,7 +245,7 @@ var j=await r.json();
 if(!voixOn) return;
 if(!j.audio) throw new Error("pas d'audio");
 audioCF=new Audio("data:audio/mpeg;base64,"+j.audio);
-audioCF.playbackRate=1.2; audioCF.preservesPitch=true;
+audioCF.playbackRate=1; audioCF.preservesPitch=true;
 await audioCF.play();
 }catch(e){ if(voixOn) parlerNavigateur(txt); }
 }
