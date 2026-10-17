@@ -122,15 +122,18 @@ La Ruche IA
 </div>
 <div class="fil" id="fil" role="log" aria-live="polite"></div>
 <div class="idees" id="idees"></div>
+<div class="idees" id="apercu" style="display:none;align-items:center"><img id="apercuImg" alt="Aperçu de la capture jointe" style="height:52px;border-radius:8px;border:1px solid var(--trait)"><span>Capture jointe</span><button type="button" id="retirerImg">Retirer</button></div>
 <form class="saisie" id="form">
 <label class="sr" for="texte">Votre message</label>
 <textarea id="texte" maxlength="1500" rows="2" placeholder=""></textarea>
 <button class="btn micro" id="micro" type="button" aria-pressed="false" title="Parler au lieu d'écrire">🎤 Parler</button>
+<button class="btn micro" id="joindre" type="button" title="Joindre une capture d'écran">📎 Capture d'écran</button>
+<input type="file" id="fichier" accept="image/*" class="sr" tabindex="-1" aria-hidden="true">
 <button class="btn" id="envoyer" type="submit">Envoyer</button>
 </form>
 <div class="compteur"><span id="nb">0</span> / 1500</div>
 </div>
-<p class="avert">Les agents sont des IA : ils peuvent se tromper et ne remplacent ni un professionnel du droit, de la santé ou de la finance, ni votre banque. Ne partagez jamais de mot de passe, de code reçu par SMS ni de numéro de carte.</p>
+<p class="avert">Les agents sont des IA : ils peuvent se tromper et ne remplacent ni un professionnel du droit, de la santé ou de la finance, ni votre banque. Ne partagez jamais de mot de passe, de code reçu par SMS ni de numéro de carte, et ne joignez pas de capture qui les montre. Les captures sont envoyées à l'IA le temps de la réponse, comme vos messages.</p>
 </section>
 
 <section id="agents" aria-labelledby="t-agents">
@@ -156,7 +159,7 @@ La Ruche IA
 <footer>
 <div class="wrap">
 <div>© La Ruche IA · Un service créé par <a href="https://studio-code.fr">Studio Code</a> · <a href="/mentions-legales.html" style="font-size:.78rem;opacity:.7">Mentions légales</a></div>
-<div>Vos messages ne sont pas enregistrés par ce site. Ils sont envoyés à l'IA le temps de la réponse. Si vous utilisez le micro, la reconnaissance vocale est assurée par votre navigateur.</div>
+<div>Vos messages et captures d'écran ne sont pas enregistrés par ce site. Ils sont envoyés à l'IA le temps de la réponse. Si vous utilisez le micro, la reconnaissance vocale est assurée par votre navigateur.</div>
 </div>
 </footer>
 
@@ -195,7 +198,7 @@ var AGENTS=[
  invite:"Décrivez votre problème et votre appareil…",
  idees:["Mon wifi coupe tout le temps","Mon téléphone n'a plus de place","C'est quoi un nom de domaine ?"]}
 ];
-var courant=AGENTS[0], hist={}, enCours=false;
+var courant=AGENTS[0], hist={}, enCours=false, image=null;
 AGENTS.forEach(function(a){hist[a.id]=[];});
 var fil=document.getElementById("fil"), form=document.getElementById("form");
 var texte=document.getElementById("texte"), btn=document.getElementById("envoyer");
@@ -285,10 +288,34 @@ dessinerOnglets();
 if(defiler) document.getElementById("chat").scrollIntoView();
 }
 
+var joindre=document.getElementById("joindre"), fichier=document.getElementById("fichier");
+function retirerImage(){ image=null; document.getElementById("apercu").style.display="none"; fichier.value=""; }
+joindre.addEventListener("click",function(){ fichier.click(); });
+document.getElementById("retirerImg").addEventListener("click",retirerImage);
+fichier.addEventListener("change",function(){
+var f=fichier.files&&fichier.files[0]; if(!f) return;
+if(!/^image\//.test(f.type)){ ajouter("agent erreur","Ce fichier n'est pas une image."); retirerImage(); return; }
+var rd=new FileReader();
+rd.onload=function(){
+var im=new Image();
+im.onload=function(){
+var max=1024, k=Math.min(1,max/Math.max(im.width,im.height));
+var cv=document.createElement("canvas"); cv.width=Math.round(im.width*k); cv.height=Math.round(im.height*k);
+cv.getContext("2d").drawImage(im,0,0,cv.width,cv.height);
+image=cv.toDataURL("image/jpeg",0.8);
+document.getElementById("apercuImg").src=image; document.getElementById("apercu").style.display="flex";
+};
+im.onerror=function(){ ajouter("agent erreur","Impossible de lire cette image. Essayez une capture d'écran au format habituel."); retirerImage(); };
+im.src=rd.result;
+};
+rd.readAsDataURL(f);
+});
+
 async function envoyer(message){
 message=message.trim();
-if(!message||enCours) return;
-var a=courant;
+if((!message&&!image)||enCours) return;
+if(!message) message="Voici une capture d'écran. Peux-tu l'analyser ?";
+var a=courant, img=image;
 if(!a.url){
 ajouter("moi",message); texte.value=""; nb.textContent="0";
 ajouter("agent erreur",a.nom+" arrive très bientôt. En attendant, Clarisse est déjà disponible pour vos questions de sécurité.");
@@ -296,16 +323,16 @@ return;
 }
 enCours=true; btn.disabled=true;
 idees.style.display="none";
-ajouter("moi",message);
-texte.value=""; nb.textContent="0";
+ajouter("moi",message+(img?"  📎 (capture jointe)":""));
+texte.value=""; nb.textContent="0"; retirerImage();
 var attente=document.createElement("div");
 attente.className="msg agent";
 attente.innerHTML='<span class="points"><i></i><i></i><i></i></span>';
 fil.appendChild(attente); fil.scrollTop=fil.scrollHeight;
 try{
 var ctrl=new AbortController();
-var t=setTimeout(function(){ctrl.abort();},30000);
-var r=await fetch(a.url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:message,historique:hist[a.id].slice(-6)}),signal:ctrl.signal});
+var t=setTimeout(function(){ctrl.abort();},img?60000:30000);
+var r=await fetch(a.url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(img?{prompt:message,historique:hist[a.id].slice(-6),image:img}:{prompt:message,historique:hist[a.id].slice(-6)}),signal:ctrl.signal});
 clearTimeout(t);
 var j=await r.json().catch(function(){return {};});
 attente.remove();
