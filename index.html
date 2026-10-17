@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>La Ruche IA – Vos agents IA : sécurité, e-mails, traduction, réseaux, informatique</title>
-<meta name="description" content="Protégez-vous, simplifiez-vous la vie avec vos agents IA : Clarisse, Hugo, Lina, Léo, Camille et Théo.">
+<meta name="description" content="Protégez-vous, simplifiez-vous la vie avec vos agents IA : Clarisse, Hugo, Lina, Léo, Camille, Théo et Maya.">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#070b1a">
 <style>
@@ -137,7 +137,7 @@ La Ruche IA
 </section>
 
 <section id="agents" aria-labelledby="t-agents">
-<h2 id="t-agents">Une ruche, six agents</h2>
+<h2 id="t-agents">Une ruche, sept agents</h2>
 <p class="sous">Chaque agent a un métier. Cliquez sur une carte pour lui parler.</p>
 <div class="grille" id="grille"></div>
 </section>
@@ -158,7 +158,7 @@ La Ruche IA
 
 <footer>
 <div class="wrap">
-<div>© La Ruche IA · Un service créé par <a href="https://studio-code.fr">Studio Code</a> · <a href="/mentions-legales.html" style="font-size:.78rem;opacity:.7">Mentions légales</a> · <a href="/confidentialite.html" style="font-size:.78rem;opacity:.7">Confidentialité</a></div>
+<div>© La Ruche IA · <a href="/mentions-legales.html" style="font-size:.78rem;opacity:.7">Mentions légales</a> · <a href="/confidentialite.html" style="font-size:.78rem;opacity:.7">Confidentialité</a></div>
 <div>Vos messages et captures d'écran ne sont pas enregistrés par ce site. Ils sont envoyés à l'IA le temps de la réponse. Si vous utilisez le micro, la reconnaissance vocale est assurée par votre navigateur.</div>
 </div>
 </footer>
@@ -202,7 +202,13 @@ var AGENTS=[
  url:"https://clarisse-ia.studio-code.workers.dev/theo",
  accueil:"Bonjour, je suis Théo. Je vous aide à écrire votre CV ou votre lettre, à préparer un entretien, à analyser une offre ou à trouver une piste de métier. Je ne vois pas les offres en ligne : collez le texte de celle qui vous intéresse.",
  invite:"Dites-moi ce que vous cherchez : CV, lettre, entretien, orientation…",
- idees:["Faire mon CV étape par étape","M'entraîner à un entretien d'embauche","Quel métier pourrait me convenir ?"]}
+ idees:["Faire mon CV étape par étape","M'entraîner à un entretien d'embauche","Quel métier pourrait me convenir ?"]},
+{id:"maya",nom:"Maya",emoji:"🎮",metier:"Web, apps & jeux",role:"Studio web, applications et jeux",
+ desc:"Elle conçoit de petits sites, calculateurs, widgets et mini-jeux en HTML, CSS et JavaScript. Elle vous donne le code et vous explique comment l'essayer.",
+ url:"https://clarisse-ia.studio-code.workers.dev/maya",
+ accueil:"Bonjour, je suis Maya. Dites-moi ce que vous voulez créer : une page, un calculateur, un mini-jeu. Je vous écris le code et je vous explique comment l'ouvrir chez vous. Je ne peux pas héberger votre création sur ce site.",
+ invite:"Décrivez ce que vous voulez créer…",
+ idees:["Un calculateur de TVA simple","Un petit jeu de mémoire","Une page de présentation pour mon activité"]}
 ];
 var courant=AGENTS[0], hist={}, enCours=false, image=null;
 AGENTS.forEach(function(a){hist[a.id]=[];});
