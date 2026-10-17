@@ -35,8 +35,9 @@ header{display:flex;align-items:center;justify-content:space-between;gap:12px;fl
 @media (max-width:560px){.acces{align-items:flex-start}}
 .outils button{font:inherit;font-size:.85rem;color:var(--texte);background:transparent;border:1px solid var(--trait);border-radius:99px;padding:8px 14px;cursor:pointer;min-height:44px}
 .outils button[aria-pressed=true]{background:var(--miel);color:#06102b;border-color:var(--miel);font-weight:700}
-.hero{padding:34px 0 10px;text-align:center}
-h1{font-size:clamp(2rem,6vw,3rem);line-height:1.15;font-weight:800;letter-spacing:-.01em}
+.hero{padding:44px 0 14px;text-align:center}
+.pastille{display:inline-block;border:1px solid var(--trait);background:rgba(255,255,255,.03);color:var(--menthe);padding:6px 14px;border-radius:99px;font-size:.85rem;margin-bottom:22px}
+h1{font-size:clamp(2.2rem,6.5vw,4rem);line-height:1.08;font-weight:800;letter-spacing:-.02em}
 h1 span{background:linear-gradient(90deg,var(--miel),var(--miel2));-webkit-background-clip:text;background-clip:text;color:transparent}
 body.contraste h1 span{color:var(--miel);background:none;-webkit-background-clip:border-box}
 .phrase{max-width:560px;margin:14px auto 0;color:var(--doux);font-size:1.05rem}
@@ -124,6 +125,7 @@ La Ruche IA
 
 <main id="haut">
 <div class="hero">
+<span class="pastille">Gratuit pour essayer · en français</span>
 <h1>Votre ruche d'<span>agents IA</span></h1>
 <p class="phrase">Protégez-vous, simplifiez-vous la vie avec vos agents IA. Tout se fait par écrit : la voix est facultative.</p>
 <p style="margin-top:22px"><a class="btn" href="#chat">Choisir un agent</a></p>
