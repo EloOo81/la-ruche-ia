@@ -233,7 +233,7 @@ arretVoix();
 var txt=String(t).replace(/[•*#]/g,"").replace(/\n+/g,". ").trim();
 if(txt.length>700){ var c=txt.slice(0,700); var i=Math.max(c.lastIndexOf(". "),c.lastIndexOf("? "),c.lastIndexOf("! ")); txt=(i>200?c.slice(0,i+1):c); }
 try{
-var r=await fetch(URL_VOIX,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({texte:txt})});
+var r=await fetch(URL_VOIX,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({texte:txt,agent:courant.id})});
 var j=await r.json();
 if(!voixOn) return;
 if(!j.audio) throw new Error("pas d'audio");
