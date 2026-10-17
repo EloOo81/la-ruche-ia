@@ -26,7 +26,11 @@ a{color:var(--miel)}
 header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:20px 0 6px}
 .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.1rem;text-decoration:none;color:var(--texte)}
 .logo svg{width:34px;height:34px}
-.outils{display:flex;gap:8px;flex-wrap:wrap}
+.acces{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.outils{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.signe{font-size:1.7rem;line-height:1}
+.note{font-size:.88rem;color:var(--doux)}
+@media (max-width:560px){.acces{align-items:flex-start}}
 .outils button{font:inherit;font-size:.85rem;color:var(--texte);background:transparent;border:1px solid var(--trait);border-radius:99px;padding:8px 14px;cursor:pointer;min-height:44px}
 .outils button[aria-pressed=true]{background:var(--miel);color:#06102b;border-color:var(--miel);font-weight:700}
 .hero{padding:34px 0 10px;text-align:center}
@@ -102,9 +106,16 @@ footer p+p{margin-top:8px}
 <svg viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3de8ff"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs><path d="M20 2l15 9v18l-15 9L5 29V11z" fill="url(#g)"/><path d="M20 11l7 4v8l-7 4-7-4v-8z" fill="#070b1a"/></svg>
 La Ruche IA
 </a>
-<div class="outils" role="group" aria-label="Confort de lecture">
+<div class="acces" role="group" aria-label="Accessibilité">
+<div class="outils" role="group" aria-label="Aide pour les personnes malvoyantes">
+<span class="signe" role="img" aria-label="Pictogramme malvoyant, canne blanche">🦯</span>
 <button type="button" id="bTexte" aria-pressed="false">Texte plus grand</button>
 <button type="button" id="bContraste" aria-pressed="false">Contraste renforcé</button>
+</div>
+<div class="outils" role="group" aria-label="Information pour les personnes malentendantes">
+<span class="signe" role="img" aria-label="Pictogramme malentendant, oreille avec appareil auditif">🦻</span>
+<span class="note">Tout se fait par écrit, sans son</span>
+</div>
 </div>
 </header>
 
@@ -112,6 +123,7 @@ La Ruche IA
 <div class="hero">
 <h1>Votre ruche d'<span>agents IA</span></h1>
 <p class="phrase">Protégez-vous, simplifiez-vous la vie avec vos agents IA. Tout se fait par écrit : la voix est facultative.</p>
+<p style="margin-top:22px"><a class="btn" href="#chat">Choisir un agent</a></p>
 </div>
 
 <section id="chat" aria-labelledby="t-chat">
