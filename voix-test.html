@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex"><title>Test de voix – Clarisse</title>
+<style>
+body{font-family:system-ui,sans-serif;background:#070b1a;color:#eef2ff;margin:0;padding:24px;line-height:1.5}
+main{max-width:640px;margin:0 auto}
+h1{font-size:1.5rem}
+textarea{width:100%;min-height:110px;font:inherit;border-radius:12px;border:1px solid #222b5c;background:#0d1330;color:#eef2ff;padding:12px}
+.btns{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
+button{font:inherit;font-weight:700;border:0;border-radius:99px;padding:12px 20px;cursor:pointer;color:#06102b;background:linear-gradient(90deg,#3de8ff,#8b5cf6)}
+button.b{background:transparent;color:#eef2ff;border:1px solid #222b5c}
+#etat{color:#9aa6d1;min-height:1.5em}
+</style></head><body><main>
+<h1>Test de voix de Clarisse</h1>
+<p>Écoute les voix et dis-moi laquelle tu préfères (vitesse comprise).</p>
+<textarea id="t">Bonjour, je suis Clarisse. Ce message ressemble très probablement à une arnaque. Ne cliquez pas sur le lien, et transférez le SMS au 33700.</textarea>
+<div class="btns">
+<button data-v="cf" data-s="1">Cloudflare – normale</button>
+<button data-v="cf" data-s="1.2">Cloudflare – rapide</button>
+<button data-v="cf" data-s="1.4">Cloudflare – très rapide</button>
+<button class="b" data-v="nav" data-s="1.15">Voix de l'appareil – rapide</button>
+<button class="b" id="stop">Arrêter</button>
+</div>
+<p id="etat"></p>
+<script>
+var URL_V="https://clarisse-ia.studio-code.workers.dev/voix", audio=null, etat=document.getElementById("etat");
+function arret(){ if(audio){audio.pause();audio=null;} if(window.speechSynthesis) speechSynthesis.cancel(); }
+document.getElementById("stop").onclick=function(){arret();etat.textContent="";};
+document.querySelectorAll("button[data-v]").forEach(function(b){
+  b.onclick=async function(){
+    arret();
+    var txt=document.getElementById("t").value.trim(); if(!txt) return;
+    var vit=parseFloat(b.dataset.s);
+    if(b.dataset.v==="nav"){
+      var l=speechSynthesis.getVoices().filter(function(v){return /^fr/i.test(v.lang);});
+      var u=new SpeechSynthesisUtterance(txt); u.lang="fr-FR"; u.rate=vit; u.pitch=1.1; if(l[0]) u.voice=l[0];
+      speechSynthesis.speak(u); etat.textContent="Voix de l'appareil…"; return;
+    }
+    etat.textContent="Je prépare la voix (3 à 5 secondes)…";
+    try{
+      var r=await fetch(URL_V,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({texte:txt})});
+      var j=await r.json();
+      if(!j.audio){etat.textContent="Voix indisponible : "+(j.error||r.status);return;}
+      audio=new Audio("data:audio/mpeg;base64,"+j.audio);
+      audio.playbackRate=vit; audio.preservesPitch=true;
+      await audio.play(); etat.textContent="Lecture en cours (vitesse "+vit+")";
+    }catch(e){etat.textContent="Erreur : "+e.message;}
+  };
+});
+</script></main></body></html>
