@@ -477,7 +477,7 @@ texte.addEventListener("input",function(){nb.textContent=texte.value.length;});
 texte.addEventListener("keydown",function(e){ if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();envoyer(texte.value);} });
 var wiz=null;
 function initIdees(a){ idees.innerHTML=""; listeCour=null; a.idees.forEach(function(t){var b=document.createElement("button");b.type="button";if(typeof t==="object"){ if(t.ico){ t.ico.forEach(function(n){var im=document.createElement("img");im.src="logo-"+n+".png";im.alt=n;im.className="lg";b.appendChild(im);}); b.appendChild(document.createTextNode(" "+t.t)); } else { b.textContent=t.t; } if(t.pre) b.setAttribute("data-pre",t.pre); if(t.wiz) b.setAttribute("data-wiz",t.wiz); if(t.g) b.setAttribute("data-g",t.g); }else{b.textContent=t;}idees.appendChild(b);}); }
-var PDF_ON=false, pile=[], listeCour=null, forceCopy=false, forceMail=false, forcePdf="";
+var PDF_ON=true, pile=[], listeCour=null, forceCopy=false, forceMail=false, forcePdf="";
 function snap(){ pile.push({w:wiz?JSON.parse(JSON.stringify(wiz)):null,l:listeCour,n:fil.children.length}); }
 var GW={
 linkedin:{btn:"Post pro LinkedIn",nom:"post LinkedIn",steps:["type","sujet","ton","obj"],
