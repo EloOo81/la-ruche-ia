@@ -69,6 +69,7 @@ h2{font-size:clamp(1.5rem,4vw,2.1rem);margin-bottom:8px;letter-spacing:-.01em}
 @keyframes rebond{0%,80%,100%{transform:translateY(0);opacity:.4}40%{transform:translateY(-6px);opacity:1}}
 .idees{display:flex;flex-wrap:wrap;gap:8px;padding:0 20px 14px}
 .idees button{font:inherit;font-size:.86rem;color:var(--doux);background:transparent;border:1px solid var(--trait);border-radius:99px;padding:7px 13px;cursor:pointer}
+.idees button img.lg{height:18px;width:auto;vertical-align:middle;margin-right:5px}
 .idees button:hover{color:var(--miel);border-color:var(--miel)}
 .saisie{display:flex;gap:10px;padding:14px 16px;border-top:1px solid var(--trait);align-items:flex-end}
 textarea{flex:1;resize:none;min-height:48px;max-height:150px;font:inherit;color:var(--texte);background:var(--nuit);border:1px solid var(--trait);border-radius:14px;padding:12px 14px}
@@ -200,7 +201,7 @@ var AGENTS=[
  url:"https://clarisse-ia.studio-code.workers.dev/leo",
  accueil:"Salut ! Moi c'est Léo. Je transforme vos idées en posts viraux et engageants. Qu'est-ce qu'on publie aujourd'hui ? 🚀",
  invite:"Ce que vous voulez publier…",
- idees:[{t:"💼 Post LinkedIn",pre:"Rédige-moi un post LinkedIn professionnel sur : "},{t:"🎬 Facebook · Instagram · TikTok · YouTube",pre:"Donne-moi une idée de post/script dynamique pour Facebook/Instagram/TikTok/YouTube sur : "},{t:"📍 Nouveauté Google Business",pre:"Rédige une actualité / publication pour ma fiche Google Business sur : "},{t:"⭐ Répondre à un avis client",pre:"Rédige une réponse diplomate et pro à cet avis client : "},{t:"📣 Promo ou annonce",pre:"Prépare un post pour annoncer une promotion/nouveauté sur : "}]},
+ idees:[{t:"💼 Post LinkedIn",pre:"Rédige-moi un post LinkedIn professionnel sur : "},{t:"Post / script",ico:["facebook","instagram","tiktok","youtube"],pre:"Donne-moi une idée de post/script dynamique pour Facebook/Instagram/TikTok/YouTube sur : "},{t:"📍 Nouveauté Google Business",pre:"Rédige une actualité / publication pour ma fiche Google Business sur : "},{t:"⭐ Répondre à un avis client",pre:"Rédige une réponse diplomate et pro à cet avis client : "},{t:"📣 Promo ou annonce",pre:"Prépare un post pour annoncer une promotion/nouveauté sur : "}]},
 {id:"camille",nom:"Camille",emoji:"💻",metier:"Informatique",role:"Assistante web et informatique",
  desc:"Elle vous guide pas à pas pour un souci de téléphone, d'ordinateur, de box ou d'imprimante, et rédige de courts textes pour un site web.",
  url:"https://clarisse-ia.studio-code.workers.dev/camille",
@@ -307,7 +308,7 @@ ajouter("agent",a.accueil);
 hist[a.id].forEach(function(m){ ajouter(m.r==="u"?"moi":"agent",m.t); });
 idees.innerHTML="";
 idees.style.display=hist[a.id].length?"none":"flex";
-a.idees.forEach(function(t){var b=document.createElement("button");b.type="button";if(typeof t==="object"){b.textContent=t.t;b.setAttribute("data-pre",t.pre);}else{b.textContent=t;}idees.appendChild(b);});
+a.idees.forEach(function(t){var b=document.createElement("button");b.type="button";if(typeof t==="object"){ if(t.ico){ t.ico.forEach(function(n){var im=document.createElement("img");im.src="logo-"+n+".png";im.alt=n;im.className="lg";b.appendChild(im);}); b.appendChild(document.createTextNode(" "+t.t)); } else { b.textContent=t.t; } b.setAttribute("data-pre",t.pre); }else{b.textContent=t;}idees.appendChild(b);});
 dessinerOnglets();
 if(defiler) document.getElementById("chat").scrollIntoView();
 }
