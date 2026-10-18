@@ -238,6 +238,8 @@ voixChoisie=fem[0]||l.filter(function(v){return !/paul|thomas|henri|claude|antoi
 if(synth){ choisirVoix(); synth.onvoiceschanged=choisirVoix; }
 var audioCF=null, URL_VOIX="https://clarisse-ia.studio-code.workers.dev/voix";
 function arretVoix(){ if(audioCF){audioCF.pause();audioCF=null;} if(synth) synth.cancel(); }
+function ruHeaders(){ var h={"Content-Type":"application/json"}; try{ var c=localStorage.getItem("ruche_code"); if(c) h["X-Ruche-Code"]=c; }catch(e){} return h; }
+(function(){ try{ if(location.hash==="#activer"){ var c=window.prompt("Code d'activation"); if(c){ localStorage.setItem("ruche_code",c.trim()); } history.replaceState(null,"",location.pathname); } }catch(e){} })();
 function parlerNavigateur(txt){
 if(!synth) return;
 var u=new SpeechSynthesisUtterance(txt); u.lang="fr-FR"; if(voixChoisie) u.voice=voixChoisie;
@@ -354,7 +356,7 @@ fil.appendChild(attente); fil.scrollTop=fil.scrollHeight;
 try{
 var ctrl=new AbortController();
 var t=setTimeout(function(){ctrl.abort();},img?60000:30000);
-var r=await fetch(a.url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(img?{prompt:message,historique:hist[a.id].slice(-6),image:img}:{prompt:message,historique:hist[a.id].slice(-6)}),signal:ctrl.signal});
+var r=await fetch(a.url,{method:"POST",headers:ruHeaders(),body:JSON.stringify(img?{prompt:message,historique:hist[a.id].slice(-6),image:img}:{prompt:message,historique:hist[a.id].slice(-6)}),signal:ctrl.signal});
 clearTimeout(t);
 var j=await r.json().catch(function(){return {};});
 attente.remove();
