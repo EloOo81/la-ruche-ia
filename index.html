@@ -102,7 +102,15 @@ textarea:focus-visible{outline:none;border-color:var(--miel);box-shadow:0 0 0 2p
 .compteur{font-size:.78rem;color:var(--doux);padding:0 20px 12px;text-align:right}
 .avert{font-size:.84rem;color:var(--doux);margin-top:14px}
 /* Cartes agents */
-.grille{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}
+.grille{display:block}
+.selagents{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.selagents button{font:inherit;color:var(--texte);background:rgba(139,92,246,.14);border:1.5px solid var(--miel2);border-radius:99px;padding:9px 14px;cursor:pointer}
+.selagents button[aria-pressed=true]{background:linear-gradient(90deg,var(--miel),var(--miel2));color:#06102b;font-weight:700;border-color:transparent}
+.panneau{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;background:var(--carte);border:1px solid var(--trait);border-radius:18px;padding:20px}
+.panneau[hidden]{display:none}
+.panneau h3{font-size:1.1rem;margin-bottom:6px}
+.panneau p{color:var(--doux);font-size:.97rem;max-width:560px}
+.panneau .btn{padding:11px 22px;margin-top:4px}
 .agent{font:inherit;color:inherit;text-align:left;cursor:pointer;background:var(--carte);border:1px solid var(--trait);border-radius:var(--rayon);padding:22px;position:relative}
 .agent:hover{border-color:rgba(61,232,255,.55)}
 .agent.actif{border-color:rgba(61,232,255,.55);box-shadow:0 0 0 1px rgba(61,232,255,.2),0 20px 50px -25px rgba(139,92,246,.5)}
@@ -171,8 +179,8 @@ La Ruche IA
 </section>
 
 <section id="agents" aria-labelledby="t-agents">
-<h2 id="t-agents">Une ruche, sept agents</h2>
-<p class="sous">Un seul site pour échanger avec tous vos agents selon vos besoins. Chaque agent a son métier : cliquez sur une carte pour lui parler.</p>
+<h2 id="t-agents">Ce que fait chaque agent</h2>
+<p class="sous">Un seul site pour échanger avec tous vos agents selon vos besoins. Touchez un agent pour voir ce qu'il fait, puis parlez-lui.</p>
 <div class="grille" id="grille"></div>
 </section>
 
@@ -307,18 +315,20 @@ onglets.innerHTML="";
 grille.innerHTML="";
 var mini=document.getElementById("mini"); mini.innerHTML="";
 ["hugo","clarisse","lina","leo","camille","theo","maya"].forEach(function(id){ var a=AGENTS.filter(function(x){return x.id===id;})[0]; if(!a) return; var m=document.createElement("button"); m.type="button"; m.setAttribute("role","listitem"); m.innerHTML='<span class="em" aria-hidden="true">'+a.emoji+'</span><span><b>'+a.nom+'</b><small>'+a.metier+'</small></span>'; m.addEventListener("click",function(){choisir(a,true);}); mini.appendChild(m); });
-AGENTS.forEach(function(a){
+var ORD=["hugo","clarisse","lina","leo","camille","theo","maya"]; AGENTS.slice().sort(function(x,y){return ORD.indexOf(x.id)-ORD.indexOf(y.id);}).forEach(function(a){
 var b=document.createElement("button");
 b.type="button"; b.setAttribute("role","tab");
 b.setAttribute("aria-selected",a===courant?"true":"false");
 b.innerHTML=a.emoji+" "+a.nom+" <small>· "+a.metier+"</small>";
 b.addEventListener("click",function(){choisir(a,false);});
 onglets.appendChild(b);
-var c=document.createElement("button");
-c.type="button"; c.className="agent"+(a.url?" actif":"");
-c.innerHTML='<span class="etat">'+(a.url?"Disponible":"Bientôt")+'</span><div class="hex" aria-hidden="true">'+a.emoji+'</div><h3>'+a.nom+'</h3><p>'+a.desc+'</p>';
-c.addEventListener("click",function(){choisir(a,true);});
-grille.appendChild(c);
+var sb=document.createElement("button"); sb.type="button"; sb.setAttribute("aria-pressed",a.id==="leo"?"true":"false"); sb.innerHTML='<span aria-hidden="true">'+a.emoji+'</span> '+a.nom; sb.setAttribute("data-id",a.id);
+var pn=document.createElement("div"); pn.className="panneau"; pn.id="pn-"+a.id; if(a.id!=="leo") pn.hidden=true;
+pn.innerHTML='<div class="hex" aria-hidden="true">'+a.emoji+'</div><div><h3>'+a.nom+' · '+a.metier+'</h3><p>'+a.desc+'</p></div>';
+var pb=document.createElement("button"); pb.type="button"; pb.className="btn"; pb.textContent="Parler à "+a.nom; pb.addEventListener("click",function(){choisir(a,true);}); pn.appendChild(pb);
+sb.addEventListener("click",function(){ [].forEach.call(grille.querySelectorAll(".selagents button"),function(x){x.setAttribute("aria-pressed",x===sb?"true":"false");}); [].forEach.call(grille.querySelectorAll(".panneau"),function(x){x.hidden=(x!==pn);}); });
+if(!grille.querySelector(".selagents")){ var sl=document.createElement("div"); sl.className="selagents"; grille.appendChild(sl); }
+grille.querySelector(".selagents").appendChild(sb); grille.appendChild(pn);
 });
 }
 function choisir(a,defiler){
@@ -448,7 +458,7 @@ if(bt.getAttribute("data-wk")){ var v=bt.getAttribute("data-wo"); if(bt.getAttri
 if(bt.getAttribute("data-wps")){ var n=bt.getAttribute("data-wps"); if(n==="plus"){ affOver="5 autres accroches"; envoyer(wizCtx.base+" Donne 5 NOUVELLES accroches numérotées de 1 à 5, différentes des précédentes, avec la ligne Mon préféré. Pas de script. Aucune question."); } else { affOver="Écris le contenu avec l'accroche n°"+n; envoyer(wizScript(n)); } return; }
 if(bt.getAttribute("data-wt")){ wiz.type=bt.getAttribute("data-wt"); wiz.step="sujet"; ajouter("moi",wiz.type); ajouter("agent","Sur quel sujet ? Écris-le dans la case ci-dessous, ou dicte-le avec Parler."); idees.style.display="none"; texte.focus(); return; }
 var pre=bt.getAttribute("data-pre"); if(pre){ wiz=null; texte.value=pre; nb.textContent=texte.value.length; texte.focus(); try{ texte.setSelectionRange(pre.length,pre.length); }catch(x){} } else { envoyer(bt.textContent); } });
-choisir(AGENTS[0],false);
+choisir(AGENTS.filter(function(x){return x.id==="leo";})[0]||AGENTS[0],false);
 })();
 </script>
 </body>
