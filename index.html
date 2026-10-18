@@ -69,6 +69,8 @@ h2{font-size:clamp(1.5rem,4vw,2.1rem);margin-bottom:8px;letter-spacing:-.01em}
 .msg{max-width:88%;padding:12px 16px;border-radius:16px;white-space:pre-wrap;word-wrap:break-word;font-size:.98rem}
 .msg.agent{background:#182050;border:1px solid var(--trait);border-top-left-radius:4px;align-self:flex-start}
 .msg.moi{background:linear-gradient(90deg,var(--miel),var(--miel2));color:#06102b;font-weight:600;border-top-right-radius:4px;align-self:flex-end}
+.copier{display:block;margin-top:10px;font:inherit;font-size:.82rem;color:var(--texte);background:transparent;border:1px solid var(--trait);border-radius:99px;padding:6px 14px;cursor:pointer}
+.copier:hover,.copier:active{border-color:var(--miel);background:rgba(61,232,255,.12)}
 .msg.erreur{border-color:#7a3340;color:#ffc9d1}
 .points{display:inline-flex;gap:5px;padding:4px 0}
 .points i{width:8px;height:8px;border-radius:50%;background:var(--miel);animation:rebond 1s infinite ease-in-out}
@@ -127,7 +129,7 @@ textarea:focus-visible{outline:none;border-color:var(--miel);box-shadow:0 0 0 2p
 footer{border-top:1px solid var(--trait);margin-top:30px;padding:28px 0 46px;color:var(--doux);font-size:.88rem}
 footer .wrap{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-between}
 .sr{position:absolute;left:-9999px}
-@media (max-width:560px){nav{display:none}.msg{max-width:95%}.actions .ic{padding:10px 14px;font-size:1.05rem}.lb{display:none}.actions{gap:8px}.actions .btn{padding:11px 18px}}
+@media (max-width:560px){nav{display:none}.msg{max-width:95%}.actions .ic{padding:9px 11px;font-size:1.05rem}.lb{display:none}.actions{gap:6px}.actions .btn{padding:11px 16px}.saisie{padding:12px 12px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
@@ -300,10 +302,12 @@ if(voixOn){ parler("Bonjour, je suis "+courant.nom+". Je vous répondrai aussi �
 });
 
 /* ---- Affichage ---- */
+function copierSecours(t){ var z=document.createElement("textarea"); z.value=t; z.setAttribute("readonly",""); z.style.position="fixed"; z.style.opacity="0"; document.body.appendChild(z); z.select(); try{ document.execCommand("copy"); }catch(e){} document.body.removeChild(z); }
 function ajouter(classe, contenu){
 var d=document.createElement("div");
 d.className="msg "+classe;
 d.textContent=contenu;
+if(classe==="agent"&&contenu.length>150){ var cp=document.createElement("button"); cp.type="button"; cp.className="copier"; cp.textContent="📋 Copier"; cp.addEventListener("click",function(){ var ok=function(){ cp.textContent="✓ Copié"; setTimeout(function(){ cp.textContent="📋 Copier"; },2000); }; try{ if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(contenu).then(ok,function(){ copierSecours(contenu); ok(); }); } else { copierSecours(contenu); ok(); } }catch(e){ copierSecours(contenu); ok(); } }); d.appendChild(cp); }
 fil.appendChild(d);
 fil.scrollTop=fil.scrollHeight;
 return d;
