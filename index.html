@@ -71,6 +71,7 @@ h2{font-size:clamp(1.5rem,4vw,2.1rem);margin-bottom:8px;letter-spacing:-.01em}
 .msg.moi{background:linear-gradient(90deg,var(--miel),var(--miel2));color:#06102b;font-weight:600;border-top-right-radius:4px;align-self:flex-end}
 .copier{display:block;margin-top:10px;font:inherit;font-size:.82rem;color:var(--texte);background:transparent;border:1px solid var(--trait);border-radius:99px;padding:6px 14px;cursor:pointer}
 .bloc{margin:0 0 18px}.bloc:last-child{margin-bottom:0}.bloc .lbl{font-weight:700;font-size:.82rem;opacity:.75;margin-bottom:3px}.bloc .txt{white-space:pre-wrap}.bloc .lig{display:flex;gap:8px;align-items:flex-start;margin:4px 0}.bloc .lig span{flex:1}.cpb{display:inline-flex;align-items:center;justify-content:center;flex:none;font:inherit;font-size:.9rem;line-height:1;background:transparent;border:1px solid var(--trait);border-radius:8px;padding:5px 8px;cursor:pointer;margin-top:4px;color:var(--texte)}.lig .cpb{margin-top:0}.cpb:hover,.cpb:active{border-color:var(--miel);background:rgba(61,232,255,.12)}
+.pdfb{display:inline-flex;align-items:center;gap:8px;margin-top:6px}.pdfb:disabled{opacity:.6}
 .copier:hover,.copier:active{border-color:var(--miel);background:rgba(61,232,255,.12)}
 .msg.erreur{border-color:#7a3340;color:#ffc9d1}
 .points{display:inline-flex;gap:5px;padding:4px 0}
@@ -216,45 +217,45 @@ var AGENTS=[
 {id:"clarisse",nom:"Clarisse",emoji:"🛡️",metier:"Experte Sécurité & Anti-arnaque",role:"Agente de sécurité",
  desc:"Elle analyse un SMS, un e-mail ou une capture d'écran suspects et vous dit si c'est une arnaque. Elle vous aide aussi si votre compte est piraté.",
  url:"https://clarisse-ia.studio-code.workers.dev/",
- accueil:"Bonjour, je suis Clarisse. Collez ici un message qui vous paraît louche, ou posez-moi une question de sécurité. Je ne vous demanderai jamais de mot de passe, de code ou de numéro de carte.",
+ accueil:"Choisissez une action ci-dessous, ou collez un message suspect. Je ne vous demanderai jamais de mot de passe, de code ou de numéro de carte.",
  invite:"Collez ici le message suspect…",
- idees:["Colissimo : colis bloqué, payez 1,99 € de frais","Mon compte a été piraté, que faire ?","Comment créer un mot de passe solide ?"]},
+ idees:[{t:"📩 Analyser un message suspect",g:"cl_msg"},{t:"⚠️ J'ai déjà cliqué ou répondu",g:"cl_clique"},{t:"📄 Conseils à imprimer",g:"cl_conseils"}]},
 {id:"hugo",nom:"Hugo",emoji:"✉️",metier:"Secrétaire & Formulaires",role:"Secrétaire virtuel",
  desc:"Il rédige vos e-mails et courriers, relance un devis, corrige et résume vos textes, et vous guide case par case pour remplir un formulaire. Vous relisez et envoyez vous-même.",
  url:"https://clarisse-ia.studio-code.workers.dev/hugo",
- accueil:"Bonjour, je suis Hugo, votre secrétaire virtuel. Choisissez ce que vous voulez faire ci-dessous, ou écrivez-moi directement. C'est vous qui relisez et envoyez.",
+ accueil:"Choisissez ce que vous voulez rédiger ci-dessous. C'est vous qui relisez et envoyez.",
  invite:"Collez un e-mail ou décrivez ce qu'il faut rédiger…",
  idees:[{t:"✉️ Écrire un e-mail",g:"mail"},{t:"📝 Corriger un texte",g:"texte"},{t:"📄 Courrier officiel",g:"courrier"},{t:"🧾 Remplir un formulaire",g:"formulaire"}]},
 {id:"lina",nom:"Lina",emoji:"🌍",metier:"Experte Traduction",role:"Traduction et adaptation culturelle",
  desc:"Elle traduit vos textes et les adapte à la culture et au public du pays visé. Pour un document officiel, il faut un traducteur assermenté.",
  url:"https://clarisse-ia.studio-code.workers.dev/lina",
- accueil:"Bonjour, je suis Lina. Donnez-moi votre texte, la langue et le pays visés, et je le traduis en l'adaptant à votre public. Pour un document officiel, il faudra un traducteur assermenté.",
+ accueil:"Choisissez une action ci-dessous. Pour un document officiel, il faut un traducteur assermenté.",
  invite:"Collez le texte à traduire et indiquez la langue visée…",
- idees:["Traduire ma présentation en anglais","Écrire à un client en Espagne","Adapter mon texte pour un public allemand"]},
+ idees:[{t:"🌍 Traduire un texte",g:"lina_trad"},{t:"🔎 Relire ma traduction",g:"lina_relire"},{t:"✉️ Écrire à un client étranger",g:"lina_client"}]},
 {id:"leo",nom:"Léo",emoji:"📱",metier:"Expert Réseaux Sociaux & Vidéo",role:"Réseaux sociaux",
  desc:"Il prépare vos publications Facebook, Instagram, TikTok, YouTube et Google Business : accroches, textes, scripts vidéo, hashtags et mots-clés, prêts à copier. Vous n'avez plus qu'à les coller et à publier vous-même.",
  url:"https://clarisse-ia.studio-code.workers.dev/leo",
- accueil:"Salut ! Moi c'est Léo. Je transforme vos idées en posts viraux et engageants. Qu'est-ce qu'on publie aujourd'hui ? 🚀",
+ accueil:"Choisissez ce que vous voulez publier ci-dessous.",
  invite:"Ce que vous voulez publier…",
  idees:[{t:"Post pro",ico:["linkedin"],g:"linkedin"},{t:"Post / script",ico:["facebook","instagram","tiktok","youtube"],wiz:"1"},{t:"📍 Nouveauté Google Business",g:"google"},{t:"⭐ Répondre à un avis client",g:"avis"},{t:"📣 Promo ou annonce",g:"promo"}]},
 {id:"camille",nom:"Camille",emoji:"💻",metier:"Assistante Informatique & Web",role:"Assistante web et informatique",
  desc:"Elle vous guide pas à pas pour un souci de téléphone, d'ordinateur, de box ou d'imprimante, et rédige de courts textes pour un site web.",
  url:"https://clarisse-ia.studio-code.workers.dev/camille",
- accueil:"Bonjour, je suis Camille. Dites-moi quel appareil vous utilisez et ce qui ne va pas, et je vous guide pas à pas. Je ne vois pas votre écran : décrivez-moi ce que vous voyez.",
+ accueil:"Choisissez une action ci-dessous. Je ne vois pas votre écran : décrivez-moi ce que vous voyez.",
  invite:"Décrivez votre problème et votre appareil…",
- idees:["Mon wifi coupe tout le temps","Mon téléphone n'a plus de place","C'est quoi un nom de domaine ?"]},
+ idees:[{t:"🔧 Dépanner mon appareil",g:"cam_dep"},{t:"💡 Comprendre un mot",g:"cam_expl"},{t:"🖥️ Texte pour mon site",g:"cam_web"}]},
 {id:"theo",nom:"Théo",emoji:"🎓",metier:"Conseiller Orientation & Carrière",role:"Orientation et carrière",
  desc:"Il vous aide à écrire un CV et une lettre de motivation, à préparer un entretien, à améliorer LinkedIn et à trouver votre voie.",
  url:"https://clarisse-ia.studio-code.workers.dev/theo",
- accueil:"Bonjour, je suis Théo. Je vous aide à écrire votre CV ou votre lettre, à préparer un entretien, à analyser une offre ou à trouver une piste de métier. Je ne vois pas les offres en ligne : collez le texte de celle qui vous intéresse.",
+ accueil:"Choisissez ce que vous voulez faire ci-dessous. Je ne vois pas les offres en ligne : collez le texte de celle qui vous intéresse.",
  invite:"Dites-moi ce que vous cherchez : CV, lettre, entretien, orientation…",
- idees:["Faire mon CV étape par étape","M'entraîner à un entretien d'embauche","Quel métier pourrait me convenir ?"]},
+ idees:[{t:"📄 Faire mon CV",g:"theo_cv"},{t:"✉️ Lettre de motivation",g:"theo_lettre"},{t:"🎤 Préparer un entretien",g:"theo_entretien"},{t:"🧭 Trouver une piste de métier",g:"theo_piste"}]},
 {id:"maya",nom:"Maya",emoji:"🎮",metier:"Studio Web, Apps & Jeux",role:"Studio web, applications et jeux",
  desc:"Elle conçoit de petits sites, calculateurs, widgets et mini-jeux en HTML, CSS et JavaScript. Elle vous donne le code et vous explique comment l'essayer.",
  url:"https://clarisse-ia.studio-code.workers.dev/maya",
- accueil:"Bonjour, je suis Maya. Dites-moi ce que vous voulez créer : une page, un calculateur, un mini-jeu. Je vous écris le code et je vous explique comment l'ouvrir chez vous. Je ne peux pas héberger votre création sur ce site.",
+ accueil:"Choisissez ce que vous voulez créer ci-dessous. Je ne peux pas héberger votre création sur ce site.",
  invite:"Décrivez ce que vous voulez créer…",
- idees:["Un calculateur de TVA simple","Un petit jeu de mémoire","Une page de présentation pour mon activité"]}
+ idees:[{t:"🛠️ Créer une page ou un outil",g:"maya_creer"}]}
 ];
 var courant=AGENTS[0], hist={}, enCours=false, image=null;
 AGENTS.forEach(function(a){hist[a.id]=[];});
@@ -306,6 +307,14 @@ if(voixOn){ parler("Bonjour, je suis "+courant.nom+". Je vous répondrai aussi �
 /* ---- Affichage ---- */
 function copierSecours(t){ var z=document.createElement("textarea"); z.value=t; z.setAttribute("readonly",""); z.style.position="fixed"; z.style.opacity="0"; document.body.appendChild(z); z.select(); try{ document.execCommand("copy"); }catch(e){} document.body.removeChild(z); }
 var ICO_COPY="<svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"9\" y=\"9\" width=\"11\" height=\"11\" rx=\"2\"/><path d=\"M5 15V6a2 2 0 0 1 2-2h9\"/></svg>", ICO_OK="<svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12.5l4.5 4.5L19 7.5\"/></svg>";
+var ICO_PDF='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8"/><path d="M8 17h8"/><path d="M8 9h2"/></svg>';
+function chargerPdf(cb,err){ if(window.jspdf&&window.jspdf.jsPDF){ cb(); return; } var sc=document.createElement("script"); sc.src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"; sc.onload=cb; sc.onerror=err; document.head.appendChild(sc); }
+function texteDuPdf(t,mode){ if(mode==="all") return t.trim(); var cut=t.search(/\n\s*(Avant d.envoyer|Envoi conseill|Modifications principales|Adaptations|Corrections|Conseils|Point à vérifier|Traduction française|Traduction non officielle)/i); if(cut>0) t=t.slice(0,cut); return t.replace(/^\s*(Cases habituelles[^\n]*)\n/i,"").trim(); }
+function faitPdf(txt,id){ var J=window.jspdf.jsPDF, d=new J({unit:"mm",format:"a4"}); d.setFont("helvetica","normal"); d.setFontSize(11); var c=txt.replace(/[’‘]/g,"'").replace(/[“”]/g,'"').replace(/…/g,"...").replace(/€/g," euros").replace(/[–—]/g,"-").replace(/•/g,"-").replace(/œ/g,"oe").replace(/Œ/g,"OE").replace(/[^\n\x20-\x7E -ÿ]/g,""); var l=d.splitTextToSize(c,170), y=22; l.forEach(function(x){ if(y>275){ d.addPage(); y=22; } if(x.trim()===""){ y+=3; return; } d.text(x,20,y); y+=6; }); d.save("document-"+(id||"ruche")+".pdf"); }
+var ICO_MAIL='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>';
+function boutonMail(contenu){ var b=document.createElement("button"); b.type="button"; b.className="copier pdfb mailb"; b.innerHTML=ICO_MAIL+" Ouvrir dans ma messagerie"; b.addEventListener("click",function(){ var t=texteDuPdf(contenu,"cut"), obj="", m=t.match(/^\s*Objet\s*:\s*(.+)$/mi); if(m){ obj=m[1].trim(); t=t.replace(m[0],""); } t=t.replace(/^\s+/,""); var corps=encodeURIComponent(t); while(corps.length>1700){ t=t.slice(0,Math.floor(t.length*0.9)); corps=encodeURIComponent(t); } window.location.href="mailto:?subject="+encodeURIComponent(obj)+"&body="+corps; }); return b; }
+function boutonsCode(d,contenu){ var m=contenu.match(/```[a-zA-Z]*\n([\s\S]*?)```/); if(!m) return; var code=m[1].replace(/\s+$/,""); var b=document.createElement("button"); b.type="button"; b.className="copier pdfb"; b.innerHTML=ICO_COPY+" Copier le code"; b.addEventListener("click",function(){ boutonCopie(code).click(); b.innerHTML=ICO_OK+" Code copié"; setTimeout(function(){ b.innerHTML=ICO_COPY+" Copier le code"; },1800); }); d.appendChild(b); var t=document.createElement("button"); t.type="button"; t.className="copier pdfb"; t.innerHTML=ICO_PDF+" Télécharger index.html"; t.addEventListener("click",function(){ var u=URL.createObjectURL(new Blob([code],{type:"text/html"})); var a=document.createElement("a"); a.href=u; a.download="index.html"; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){ URL.revokeObjectURL(u); },2000); }); d.appendChild(t); }
+function boutonPdf(contenu,mode){ var b=document.createElement("button"); b.type="button"; b.className="copier pdfb"; b.innerHTML=ICO_PDF+" Télécharger en PDF"; b.addEventListener("click",function(){ b.disabled=true; var fin=function(){ b.disabled=false; }; chargerPdf(function(){ try{ faitPdf(texteDuPdf(contenu,mode),courant.id); }catch(e){ ajouter("erreur","Le PDF n'a pas pu être créé. Utilisez le bouton Copier et collez le texte dans Word ou Google Docs."); } fin(); },function(){ ajouter("erreur","Impossible de charger l'outil PDF. Vérifiez votre connexion, ou utilisez le bouton Copier."); fin(); }); }); return b; }
 function boutonCopie(txt){ var cp=document.createElement("button"); cp.type="button"; cp.className="cpb"; cp.title="Copier"; cp.setAttribute("aria-label","Copier"); cp.innerHTML=ICO_COPY; cp.addEventListener("click",function(){ var ok=function(){ cp.innerHTML=ICO_OK; cp.title="Copié"; setTimeout(function(){ cp.innerHTML=ICO_COPY; cp.title="Copier"; },1800); }; try{ if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(ok,function(){ copierSecours(txt); ok(); }); } else { copierSecours(txt); ok(); } }catch(e){ copierSecours(txt); ok(); } }); return cp; }
 function netBloc(t){ return t.replace(/\*\*/g,"").replace(/^#+\s*/,"").trim(); }
 function blocsCopiables(d,contenu){
@@ -316,7 +325,7 @@ blocs.forEach(function(bl){
  var div=document.createElement("div"); div.className="bloc";
  var prem=netBloc(lignes[0]), label=null, reste=lignes.slice(), m=prem.match(/^([^:]{2,45}):\s*(.*)$/);
  var tousMaj=prem.length<45&&prem===prem.toUpperCase()&&/[A-ZÉÈ]{3}/.test(prem);
- if(m||tousMaj){ label=m?m[1]:prem; nonCop=/conseil|tendance|astuce|rappel|préféré|preferé|astuces|envoi conseill|avant d|modifications|vérifier|^case|cases habituelles/i.test(label)||/^mon pr/i.test(prem); reste=m&&m[2]?[m[2]].concat(lignes.slice(1)):lignes.slice(1); }
+ if(m||tousMaj){ label=m?m[1]:prem; nonCop=/conseil|tendance|astuce|rappel|préféré|preferé|astuces|envoi conseill|avant d|modifications|vérifier|^case|cases habituelles|adaptations|corrections|traduction française|traduction non|à retenir|si ça ne marche|si c.est trop tard|mon conseil|question \d|niveau de risque/i.test(label)||/^mon pr/i.test(prem); reste=m&&m[2]?[m[2]].concat(lignes.slice(1)):lignes.slice(1); }
  else if(/^mon pr[ée]f[ée]r[ée]/i.test(prem)){ nonCop=true; }
  var tit=document.createElement("div"); 
  if(label){ tit.className="lbl"; tit.textContent=label+(m?" :":""); div.appendChild(tit); }
@@ -334,7 +343,7 @@ function ajouter(classe, contenu){
 var d=document.createElement("div");
 d.className="msg "+classe;
 d.textContent=contenu;
-if(classe==="agent"&&contenu.length>150&&["leo","hugo","lina","theo"].indexOf(courant.id)>-1){ blocsCopiables(d,contenu); }
+if(classe==="agent"&&contenu.length>150){ var cop=["leo","hugo","lina"].indexOf(courant.id)>-1||forceCopy; if(cop) blocsCopiables(d,contenu); var pm=courant.id==="hugo"?(forcePdf||"cut"):forcePdf; if(pm&&PDF_ON&&!/^\s*Case\s*:/m.test(contenu)) d.appendChild(boutonPdf(contenu,pm)); if((forceMail||(courant.id==="hugo"&&/^\s*Objet\s*:/mi.test(contenu)))&&!/^\s*Case\s*:/m.test(contenu)) d.appendChild(boutonMail(contenu)); if(courant.id==="maya") boutonsCode(d,contenu); forceCopy=false; forcePdf=""; forceMail=false; }
 fil.appendChild(d);
 fil.scrollTop=fil.scrollHeight;
 return d;
@@ -468,7 +477,7 @@ texte.addEventListener("input",function(){nb.textContent=texte.value.length;});
 texte.addEventListener("keydown",function(e){ if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();envoyer(texte.value);} });
 var wiz=null;
 function initIdees(a){ idees.innerHTML=""; listeCour=null; a.idees.forEach(function(t){var b=document.createElement("button");b.type="button";if(typeof t==="object"){ if(t.ico){ t.ico.forEach(function(n){var im=document.createElement("img");im.src="logo-"+n+".png";im.alt=n;im.className="lg";b.appendChild(im);}); b.appendChild(document.createTextNode(" "+t.t)); } else { b.textContent=t.t; } if(t.pre) b.setAttribute("data-pre",t.pre); if(t.wiz) b.setAttribute("data-wiz",t.wiz); if(t.g) b.setAttribute("data-g",t.g); }else{b.textContent=t;}idees.appendChild(b);}); }
-var pile=[], listeCour=null;
+var PDF_ON=false, pile=[], listeCour=null, forceCopy=false, forceMail=false, forcePdf="";
 function snap(){ pile.push({w:wiz?JSON.parse(JSON.stringify(wiz)):null,l:listeCour,n:fil.children.length}); }
 var GW={
 linkedin:{btn:"Post pro LinkedIn",nom:"post LinkedIn",steps:["type","sujet","ton","obj"],
@@ -492,7 +501,7 @@ avis:{max:500,btn:"Répondre à un avis client",nom:"réponse à un avis client"
  sq:"Collez ici le texte de l'avis du client, dans la case ci-dessous.",
  cons:"Réponse à un avis : 3 à 6 lignes, remercie, reconnais ce qui est dit sans te justifier ni accuser, aucune donnée personnelle, ne promets que ce qui est tenable, signature simple.",
  plus:"Donne une version principale puis une version plus courte, séparées par une ligne vide. Si l'avis est faux ou injuste, ajoute 1 conseil : le signaler à Google."},
-mail:{max:600,btn:"Écrire un e-mail",nom:"e-mail",steps:["type","sujet","ton","obj"],lab:{sujet:"Informations"},
+mail:{max:600,mail:true,btn:"Écrire un e-mail",nom:"e-mail",steps:["type","sujet","ton","obj"],lab:{sujet:"Informations"},
  type:{q:"Quel type d'e-mail ?",ch:["Relancer un devis","Répondre à un client mécontent","Demander un rendez-vous","Annoncer un retard ou un changement","Remercier un client","Refuser poliment"]},
  ton:{q:"Quel ton souhaitez-vous ?",ch:["Courtois et professionnel","Chaleureux","Ferme mais poli"]},
  obj:{q:"Quel est votre objectif ?",ch:["Obtenir une réponse","Obtenir un paiement","Fixer un rendez-vous","Garder une bonne relation"]},
@@ -515,6 +524,82 @@ formulaire:{max:600,btn:"Remplir un formulaire",nom:"aide pour remplir un formul
  sq:"Quel est ce formulaire ? Écrivez son nom ou collez ses cases. Vous pouvez aussi joindre une capture avec le trombone, puis appuyer sur Envoyer. Ne tapez aucun mot de passe, code reçu par SMS, numéro de carte ou de sécurité sociale.",
  cons:"Guide case par case, dans l'ordre du formulaire. Si le formulaire exact n'est pas fourni, commence par une ligne : Cases habituelles, à comparer avec votre formulaire réel. Pour chaque case : Case : le nom. Quoi écrire : explication simple. Exemple : valeur fictive. Pour tout mot de passe, code, carte, IBAN ou numéro de sécurité sociale, dis de le saisir soi-même.",
  plus:"Termine par Avant d'envoyer : 3 points à vérifier, et rappelle de vérifier les règles sur le site officiel."},
+lina_trad:{max:600,pdf:"cut",btn:"Traduire un texte",nom:"traduction",steps:["lang","public","ton","sujet"],lab:{lang:"Langues",public:"Public visé",ton:"Formalité",sujet:"Texte à traduire"},
+ lang:{q:"Vers quelle langue ?",ch:["Français → Anglais","Français → Espagnol","Français → Allemand","Français → Italien","Français → Portugais","Vers le français"]},
+ public:{q:"Pour quel public ?",ch:["Clients ou partenaires professionnels","Grand public","Un proche ou un ami","Site web ou fiche produit"]},
+ ton:{q:"Quel niveau de formalité ?",ch:["Formel","Neutre","Détendu"]},
+ sq:"Collez le texte à traduire dans la case ci-dessous (900 caractères maximum).",
+ cons:"Traduis en adaptant au pays et au public : pas de mot à mot, formules de politesse et formats de date et de monnaie du pays. Garde noms propres, chiffres et montants exacts. N'invente rien.",
+ plus:"Donne d'abord la traduction seule, prête à copier. Puis, après une ligne vide : Adaptations : 2 ou 3 points courts. Si le texte est ambigu, ajoute : Point à vérifier : une ligne. Seulement si c'est un contrat, un acte ou un document officiel, juridique ou médical, ajoute : Traduction non officielle, à faire certifier. Sinon n'ajoute rien de tel. N'ajoute aucun mot absent du texte, comme une formule d'appel."},
+lina_relire:{max:900,btn:"Relire ma traduction",nom:"traduction corrigée",steps:["lang","sujet"],lab:{lang:"Langue de la traduction",sujet:"Texte d'origine et traduction"},
+ lang:{q:"Dans quelle langue est la traduction ?",ch:["Anglais","Espagnol","Allemand","Italien","Portugais","Autre langue"]},
+ sq:"Collez le texte d'origine, puis votre traduction, dans la case ci-dessous.",
+ cons:"Relis la traduction : signale les erreurs de sens et de grammaire et les formulations peu naturelles, sans rien inventer.",
+ plus:"Donne d'abord la version corrigée seule, prête à copier. Puis, après une ligne vide : Corrections : 3 points courts maximum."},
+lina_client:{max:600,mail:true,pdf:"cut",btn:"Écrire à un client étranger",nom:"message à un client étranger",steps:["lang","type","ton","sujet"],lab:{lang:"Langue du client",type:"Type de message",ton:"Formalité",sujet:"Informations"},
+ lang:{q:"Dans quelle langue écrit votre client ?",ch:["Anglais","Espagnol","Allemand","Italien","Portugais"]},
+ type:{q:"Quel type de message ?",ch:["Répondre à un e-mail","Présenter mon activité","Décrire un produit ou un service","Relancer un devis"]},
+ ton:{q:"Quel niveau de formalité ?",ch:["Formel","Neutre","Détendu"]},
+ sq:"Donnez le contenu en français, ou collez le message auquel vous répondez.",
+ cons:"Écris le message directement dans la langue du client, avec les usages de son pays. Reprends exactement les informations données (dates, montants, noms). N'invente rien : champ [À COMPLÉTER] seulement pour une information absente, comme le nom.",
+ plus:"Donne d'abord le message seul, prêt à copier. Puis, après une ligne vide : Traduction française pour vérification : le même message en français."},
+cam_dep:{max:400,skip:true,btn:"Dépanner mon appareil",nom:"dépannage",steps:["appareil","probleme","sujet"],lab:{appareil:"Appareil",probleme:"Problème",sujet:"Détails"},
+ appareil:{q:"Quel appareil ?",ch:["iPhone","Téléphone Android","Ordinateur Windows","Mac","Box internet ou wifi","Imprimante","Autre appareil"]},
+ probleme:{q:"Quel est le problème ?",ch:["Lent ou mémoire pleine","Ne s'allume plus ou écran noir","Plus de connexion internet","Une application plante","Une mise à jour bloque","Autre problème"]},
+ sq:"Décrivez ce que vous voyez : message d'erreur, depuis quand, ce que vous avez déjà essayé. Ou appuyez sur Passer.",
+ cons:"Vouvoie la personne. Donne 6 étapes numérotées au maximum, très courtes, une action par étape, du plus simple au plus risqué. Avant toute action risquée (réinitialiser, formater, supprimer), préviens et conseille de sauvegarder. N'invente aucun menu : dis que le nom peut changer selon la version.",
+ plus:"Termine par : Si ça ne marche pas : une ligne sur la suite. Pour un risque de sécurité, renvoie vers Clarisse ; pour un danger matériel, vers un professionnel."},
+cam_expl:{max:200,btn:"Comprendre un mot ou un outil",nom:"explication simple",steps:["sujet"],lab:{sujet:"Notion"},
+ sq:"Quel mot, quel outil ou quelle notion voulez-vous comprendre ? Par exemple : nom de domaine, cloud, VPN.",
+ cons:"Vouvoie la personne. Explique à quelqu'un qui débute : une définition en une phrase, une comparaison du quotidien, puis à quoi ça lui sert concrètement. 6 lignes maximum, sans jargon.",
+ plus:"Termine par : À retenir : une seule idée."},
+cam_web:{max:500,copy:true,btn:"Texte pour mon site",nom:"texte pour site web",steps:["type","sujet","ton"],lab:{type:"Page",sujet:"Mon activité",ton:"Ton"},
+ type:{q:"Quelle page ou quel texte ?",ch:["Page d'accueil","Page à propos","Description d'un service","Annonce ou actualité"]},
+ ton:{q:"Quel ton souhaitez-vous ?",ch:["Professionnel","Chaleureux","Dynamique"]},
+ sq:"Décrivez votre activité en quelques phrases : métier, ville, ce que vous proposez.",
+ cons:"Écris un texte web court et clair, sans faute d'orthographe ni de conjugaison : un titre accrocheur, 3 à 6 lignes aérées, un appel à l'action. Mots-clés naturels (métier et ville). N'invente ni prix ni chiffre.",
+ plus:"Donne le titre, puis une ligne vide, puis le texte, puis une ligne vide, puis : Appel à l'action : la phrase."},
+theo_cv:{max:650,copy:true,pdf:"cut",btn:"Faire mon CV",nom:"CV",steps:["type","sujet"],lab:{type:"Situation",sujet:"Mes informations"},
+ type:{q:"Quelle est votre situation ?",ch:["Je débute, peu ou pas d'expérience","Je change de métier","Je reprends après une pause","J'ai de l'expérience dans mon domaine"]},
+ sq:"Donnez le poste visé, votre formation, vos expériences même courtes (stages, bénévolat, petits boulots), vos compétences et vos langues.",
+ cons:"Rédige un CV d'une page : titre du poste visé : recopie mot pour mot les termes de la personne, sans jamais ajouter de métier qu'elle n'a pas écrit (pas éducatrice, pas infirmière…),  profil de 2 lignes, expériences avec verbes d'action, formation, compétences, langues. Utilise uniquement les informations données : n'invente ni diplôme, ni employeur, ni date. Toute info manquante devient [À COMPLÉTER]. Si la personne débute ou change de métier, mets en valeur ce qui est transférable.",
+ plus:"Donne le CV seul, prêt à copier. Puis, après une ligne vide : Conseils : 2 points courts."},
+theo_lettre:{max:800,mail:true,copy:true,pdf:"cut",btn:"Lettre de motivation",nom:"lettre de motivation",steps:["type","sujet","ton"],lab:{type:"Type",sujet:"Poste et atouts",ton:"Ton"},
+ type:{q:"Quel type de candidature ?",ch:["Candidature à une offre","Candidature spontanée","Reconversion ou changement de métier","Stage ou alternance"]},
+ ton:{q:"Quel ton souhaitez-vous ?",ch:["Professionnel","Motivé et chaleureux","Sobre et direct"]},
+ sq:"Collez l'offre, ou décrivez le poste, puis ajoutez 2 ou 3 de vos atouts.",
+ cons:"Rédige une lettre de 150 à 220 mots : accroche liée au poste, 2 atouts concrets, motivation, formule finale. Utilise uniquement les informations données, n'invente aucune expérience. Champs [À COMPLÉTER] pour nom, entreprise et date.",
+ plus:"Donne la lettre seule, prête à copier. Puis, après une ligne vide : Conseils : 2 points courts."},
+theo_entretien:{max:300,btn:"Préparer un entretien",nom:"préparation d'entretien",steps:["type","sujet"],lab:{type:"Entretien",sujet:"Poste visé"},
+ type:{q:"Quel type d'entretien ?",ch:["Entretien d'embauche classique","Premier entretien téléphonique","Entretien après une reconversion","Entretien pour un stage ou une alternance"]},
+ sq:"Quel poste visez-vous ? Ajoutez ce que vous craignez le plus, si vous voulez.",
+ cons:"Vouvoie la personne. Donne les 6 questions les plus probables, chacune suivie d'une piste de réponse honnête en 2 lignes, sans rien inventer. Termine par une bonne question à poser au recruteur.",
+ plus:"Format : Question 1 : ... puis Piste : ... Termine par : Pour vous entraîner, écrivez simulation et je vous poserai les questions une par une."},
+theo_piste:{max:300,skip:true,btn:"Trouver une piste de métier",nom:"pistes de métier",steps:["aime","contrainte","sujet"],lab:{aime:"Ce qui m'attire",contrainte:"Contrainte principale",sujet:"Ma situation"},
+ aime:{q:"Qu'est-ce qui vous attire le plus ?",ch:["Aider les autres","Travailler au calme, seule","Créer, être créative","Travailler de mes mains","Chiffres et organisation","Informatique et numérique"]},
+ contrainte:{q:"Quelle contrainte compte le plus ?",ch:["Travail depuis chez moi","Peu de contact en personne","Formation courte","Revenu rapide","Horaires souples"]},
+ sq:"Un mot sur votre situation : métier actuel ou passé, diplôme, ce que vous savez faire. Ou appuyez sur Passer.",
+ cons:"Vouvoie la personne. Propose 3 pistes de métiers réalistes, chacune avec : pourquoi elle colle, la formation ou le chemin le plus court, et une première action cette semaine. Reste honnête : aucune promesse d'emploi ni de revenu.",
+ plus:"Termine par : Mon conseil : une ligne."},
+maya_creer:{max:500,btn:"Créer une page ou un outil",nom:"petit projet web",steps:["type","sujet","style"],lab:{type:"Projet",sujet:"Détails",style:"Style"},
+ type:{q:"Que voulez-vous créer ?",ch:["Page de présentation","Calculateur","Petit jeu","Formulaire de contact","Autre idée"]},
+ style:{q:"Quel style visuel ?",ch:["Sobre et professionnel","Coloré et moderne","Sombre et élégant"]},
+ sq:"Décrivez ce que vous voulez : à quoi ça sert, quelles informations afficher, quelles couleurs si vous y tenez.",
+ cons:"Crée UN SEUL fichier index.html qui contient tout : le CSS dans une balise style et le JavaScript dans une balise script, sans fichier externe ni bibliothèque. Commence directement par le bloc de code, sans aucune phrase d'introduction. N'invente ni prix ni coordonnées : mets des textes entre crochets comme [PRIX]. Après le code, 2 lignes : enregistrer le fichier sous le nom index.html, puis double-cliquer dessus pour l'ouvrir.",
+ plus:""},
+cl_msg:{max:800,pdf:"all",btn:"Analyser un message suspect",nom:"analyse d'un message suspect",steps:["type","sujet"],lab:{type:"Reçu par",sujet:"Message"},
+ type:{q:"Comment avez-vous reçu ce message ?",ch:["SMS","E-mail","Appel téléphonique","Message sur un réseau social","Courrier ou colis"]},
+ sq:"Collez le message ici. Vous pouvez aussi joindre une capture avec le trombone, puis appuyer sur Envoyer. Ne collez jamais de mot de passe ni de code.",
+ cons:"La première ligne est exactement : Niveau de risque : ÉLEVÉ, ou MOYEN, ou FAIBLE, sans rien ajouter derrière. Ne parle d'un nom de domaine ou d'un lien que s'ils apparaissent dans le message. Pas de mots en majuscules, sauf le niveau. Puis 3 signes précis relevés dans le message, puis les actions à faire maintenant en étapes courtes numérotées, puis Ce qu'il ne faut surtout pas faire : 2 points. N'invente aucun numéro ni lien.",
+ plus:""},
+cl_clique:{pdf:"all",btn:"J'ai déjà cliqué ou répondu",nom:"plan d'urgence après une arnaque",steps:["quoi"],lab:{quoi:"Situation"},
+ quoi:{q:"Que s'est-il passé ?",ch:["J'ai cliqué sur un lien","J'ai donné mon mot de passe","J'ai donné mon numéro de carte","J'ai donné un code reçu par SMS","J'ai envoyé de l'argent","Mon compte est piraté"]},
+ cons:"Donne un plan d'urgence dans l'ordre, en étapes courtes numérotées : dans les 10 minutes, dans la journée, puis les démarches ensuite. Ne rassure pas à tort et ne culpabilise pas. Cite seulement la banque, le site cybermalveillance.gouv.fr et le dépôt de plainte, sans aucun numéro inventé.",
+ plus:""},
+cl_conseils:{pdf:"all",btn:"Conseils de sécurité à imprimer",nom:"fiche de conseils de sécurité",steps:["quoi"],lab:{quoi:"Sujet"},
+ quoi:{q:"Sur quel sujet ?",ch:["Mots de passe solides","Faux conseiller bancaire","SMS et appels frauduleux","Sécuriser mon téléphone","Protéger un proche âgé"]},
+ cons:"Écris une fiche courte à imprimer : un titre, 5 conseils numérotés très concrets, puis une ligne : Si c'est trop tard : la marche à suivre. Pas de jargon.",
+ plus:""},
 promo:{btn:"Promo ou annonce",nom:"annonce promo",steps:["reseau","type","sujet","ton","obj"],
  reseau:{q:"Pour quel réseau ?",ch:["Facebook","Instagram","LinkedIn","Google Business"],ico:{Facebook:"facebook",Instagram:"instagram",LinkedIn:"linkedin"}},
  type:{q:"Quel type d'annonce ?",ch:["Promotion ou réduction","Nouveau produit ou service","Ouverture ou événement","Offre limitée dans le temps"]},
@@ -525,8 +610,8 @@ promo:{btn:"Promo ou annonce",nom:"annonce promo",steps:["reseau","type","sujet"
  plus:"Puis, séparés par une ligne vide : HASHTAGS (sauf Google Business), puis 2 conseils."}
 };
 var GL={type:"Type",sujet:"Sujet",ton:"Ton",obj:"Objectif",reseau:"Réseau"};
-function gCompose(){ var g=GW[wiz.g], v=wiz.v, p="Écris, prêt à copier : "+g.nom+"."; g.steps.forEach(function(st){ p+=" "+((g.lab&&g.lab[st])||GL[st])+" : "+v[st]+"."; }); return p+" "+g.cons+" "+(g.plus||"")+" Format épuré : phrases courtes, une idée par ligne, lignes vides entre blocs. Aucune question, aucune introduction."; }
-function gNext(){ var g=GW[wiz.g]; wiz.i++; if(wiz.i>=g.steps.length){ idees.style.display="none"; var m=gCompose(); var lab=g.btn; wiz=null; pile=[]; affOver="Rédige : "+lab; envoyer(m); return; } var st=g.steps[wiz.i]; if(st==="sujet"){ wiz.step="gsujet"; ajouter("agent",g.sq); rendreIdees([]); texte.focus(); } else { wiz.step=null; ajouter("agent",g[st].q); rendreIdees(g[st].ch.map(function(c){ var o={t:c,gs:st,gv:c}; if(g[st].ico&&g[st].ico[c]) o.ico=[g[st].ico[c]]; return o; })); } }
+function gCompose(){ var g=GW[wiz.g], v=wiz.v, p="Écris, prêt à copier : "+g.nom+"."; g.steps.forEach(function(st){ p+=" "+((g.lab&&g.lab[st])||GL[st]||st)+" : "+String(v[st]).replace(/[.\s]+$/,"")+"."; }); return p+" "+g.cons+" "+(g.plus||"")+" Format épuré : phrases courtes, une idée par ligne, lignes vides entre blocs. Aucune question, aucune introduction."; }
+function gNext(){ var g=GW[wiz.g]; wiz.i++; if(wiz.i>=g.steps.length){ idees.style.display="none"; var m=gCompose(); var lab=g.btn; forceCopy=!!g.copy; forceMail=!!g.mail; forcePdf=g.pdf||""; wiz=null; pile=[]; affOver="Rédige : "+lab; envoyer(m); return; } var st=g.steps[wiz.i]; if(st==="sujet"){ wiz.step="gsujet"; ajouter("agent",g.sq); rendreIdees(g.skip?[{t:"Passer cette étape",gs:"sujet",gv:"aucun détail supplémentaire"}]:[]); texte.focus(); } else { wiz.step=null; ajouter("agent",g[st].q); rendreIdees(g[st].ch.map(function(c){ var o={t:c,gs:st,gv:c}; if(g[st].ico&&g[st].ico[c]) o.ico=[g[st].ico[c]]; return o; })); } }
 var WIZ={facebook:{nom:"Facebook",q:"Quel type de publication voulez-vous faire ?",ch:["Annonce ou nouveauté","Astuce utile","Coulisses de mon activité","Témoignage client","Question à ma communauté"]},instagram:{nom:"Instagram",q:"Quel format voulez-vous ?",ch:["Carrousel","Reel court","Story","Photo avec légende"]},tiktok:{nom:"TikTok",q:"Quel type de vidéo voulez-vous poster ?",ch:["Astuce rapide","Avant / après","Coulisses de mon métier","Tendance à détourner","Réponse à une question client"]},youtube:{nom:"YouTube",q:"Quel format voulez-vous ?",ch:["Short de moins d'une minute","Vidéo courte de 3 à 5 minutes","Tutoriel","Présentation de mon activité"]}};
 var WCONS={
 facebook:"Facebook : accroche dans les 2 premières lignes, ton chaleureux et local, 3 à 6 lignes aérées, question finale pour les commentaires. Hashtags : 0 à 3. Description = le post, lien ou appel à message en dernière ligne.",
