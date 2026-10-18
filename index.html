@@ -307,7 +307,7 @@ function ajouter(classe, contenu){
 var d=document.createElement("div");
 d.className="msg "+classe;
 d.textContent=contenu;
-if(classe==="agent"&&contenu.length>150){ var cp=document.createElement("button"); cp.type="button"; cp.className="copier"; cp.textContent="📋 Copier"; cp.addEventListener("click",function(){ var ok=function(){ cp.textContent="✓ Copié"; setTimeout(function(){ cp.textContent="📋 Copier"; },2000); }; try{ if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(contenu).then(ok,function(){ copierSecours(contenu); ok(); }); } else { copierSecours(contenu); ok(); } }catch(e){ copierSecours(contenu); ok(); } }); d.appendChild(cp); }
+if(classe==="agent"&&contenu.length>150&&["leo","hugo","lina","theo"].indexOf(courant.id)>-1){ var cp=document.createElement("button"); cp.type="button"; cp.className="copier"; cp.textContent="📋 Copier"; cp.addEventListener("click",function(){ var ok=function(){ cp.textContent="✓ Copié"; setTimeout(function(){ cp.textContent="📋 Copier"; },2000); }; try{ if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(contenu).then(ok,function(){ copierSecours(contenu); ok(); }); } else { copierSecours(contenu); ok(); } }catch(e){ copierSecours(contenu); ok(); } }); d.appendChild(cp); }
 fil.appendChild(d);
 fil.scrollTop=fil.scrollHeight;
 return d;
