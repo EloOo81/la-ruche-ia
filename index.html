@@ -34,11 +34,18 @@ header{display:flex;align-items:center;justify-content:space-between;padding:22p
 .logo svg{width:34px;height:34px}
 nav a{color:var(--doux);text-decoration:none;font-size:.95rem;margin-left:18px}
 nav a:hover{color:var(--miel)}
-.hero{padding:44px 0 30px;text-align:center}
+.hero{padding:6px 0 18px;text-align:center}
+.mini{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;max-width:700px;margin:0 auto}
+.mini button{display:flex;align-items:center;gap:10px;text-align:left;font:inherit;color:var(--texte);background:rgba(139,92,246,.14);border:1.5px solid var(--miel2);border-radius:16px;padding:9px 12px;cursor:pointer;box-shadow:0 0 0 1px rgba(61,232,255,.15)}
+.mini button:hover,.mini button:active{background:rgba(61,232,255,.14);border-color:var(--miel)}
+.mini .em{font-size:1.5rem;line-height:1}
+.mini b{display:block;font-size:.98rem}
+.mini small{display:block;color:var(--doux);font-size:.74rem;line-height:1.2}
+@media(min-width:700px){.mini{grid-template-columns:repeat(4,1fr)}}
 .pastille{display:inline-block;border:1px solid var(--trait);background:rgba(255,255,255,.03);color:var(--menthe);padding:6px 14px;border-radius:99px;font-size:.85rem;margin-bottom:22px}
-h1{font-size:clamp(2.2rem,6.5vw,4rem);line-height:1.08;font-weight:800;letter-spacing:-.02em}
+h1{font-size:clamp(1.7rem,5.2vw,3rem);line-height:1.08;font-weight:800;letter-spacing:-.02em}
 h1 span{background:linear-gradient(90deg,var(--miel),var(--miel2));-webkit-background-clip:text;background-clip:text;color:transparent}
-.phrase{max-width:620px;margin:20px auto 30px;color:var(--doux);font-size:1.15rem}
+.phrase{max-width:620px;margin:10px auto 16px;color:var(--doux);font-size:1rem}
 .btn{display:inline-block;border:0;cursor:pointer;font:inherit;font-weight:700;color:#06102b;background:linear-gradient(90deg,var(--miel),var(--miel2));padding:14px 28px;border-radius:99px;text-decoration:none;box-shadow:0 10px 30px -8px rgba(61,232,255,.45);transition:transform .15s}
 .btn:hover{transform:translateY(-2px)}
 .btn:focus-visible,button:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid var(--menthe);outline-offset:3px}
@@ -128,10 +135,9 @@ La Ruche IA
 
 <main id="haut">
 <div class="hero">
-<span class="pastille">7 experts IA dans votre équipe · gratuit pour essayer</span>
 <h1>7 <span>agents IA</span> spécialisés à votre service</h1>
 <p class="phrase">Réseaux sociaux, sécurité, secrétariat, traduction, orientation, développement web… Une équipe complète, disponible 24h/24, en français. 15 messages gratuits par jour pour essayer.</p>
-<a class="btn" href="#chat">Choisir un agent</a>
+<div class="mini" id="mini" role="list" aria-label="Les 7 agents"></div>
 </div>
 
 <section id="chat" aria-labelledby="t-chat">
@@ -299,6 +305,8 @@ function nettoyer(t){ return t.replace(/^\s*[*-]\s+/gm,"• "); }
 function dessinerOnglets(){
 onglets.innerHTML="";
 grille.innerHTML="";
+var mini=document.getElementById("mini"); mini.innerHTML="";
+["hugo","clarisse","lina","leo","camille","theo","maya"].forEach(function(id){ var a=AGENTS.filter(function(x){return x.id===id;})[0]; if(!a) return; var m=document.createElement("button"); m.type="button"; m.setAttribute("role","listitem"); m.innerHTML='<span class="em" aria-hidden="true">'+a.emoji+'</span><span><b>'+a.nom+'</b><small>'+a.metier+'</small></span>'; m.addEventListener("click",function(){choisir(a,true);}); mini.appendChild(m); });
 AGENTS.forEach(function(a){
 var b=document.createElement("button");
 b.type="button"; b.setAttribute("role","tab");
@@ -431,7 +439,7 @@ var WOBJ=["Faire cliquer sur un lien","Faire s'abonner","Faire commenter","Faire
 var affOver=null, wizCtx=null;
 function wizBase(){ var r=WIZ[wiz.reseau]; return "Contenu "+r.nom+" de type : "+wiz.type+". Sujet : "+wiz.sujet+". Ton : "+wiz.ton+". Objectif : "+wiz.obj+"."+(wiz.duree?" Durée de la vidéo : "+wiz.duree+".":""); }
 function wizCompose(){ var r=WIZ[wiz.reseau]; wizCtx={r:wiz.reseau,base:wizBase()}; return wizBase()+" Donne UNIQUEMENT 5 TITRES D'ACCROCHE différents, numérotés de 1 à 5, percutants et spécifiques à "+r.nom+" (curiosité, chiffre, erreur à éviter, avant/après, question choc), adaptés au ton et à l'objectif. Puis une seule ligne : Mon préféré : numéro X, parce que. N'écris pas encore le script ni le post. Appuie-toi sur les formats qui marchent sur "+r.nom+", sans inventer de chiffres. Aucune question."; }
-function wizScript(n){ var r=WIZ[wizCtx.r], v=wizCtx.r!=="facebook"; return wizCtx.base+" Écris maintenant le contenu complet prêt à copier, basé sur l'accroche numéro "+n+" proposée. "+WCONS[wizCtx.r]+" Puis, séparés par une ligne vide et prêts à copier : MOTS-CLÉS (5 à 8 expressions tapées vraiment sur "+r.nom+" pour ce sujet, reprises dans la description), DESCRIPTION OU LÉGENDE, HASHTAGS"+(v?", TEXTE À L'ÉCRAN ET SOUS-TITRES":"")+". Ajoute 3 conseils propres à "+r.nom+" (format, durée, horaire)"+(v?", la musique ou tendance à utiliser (sans inventer de nom précis) et le rythme de montage, en respectant la durée choisie":"")+", et une ligne 'Tendance à exploiter :'. Termine par un appel à l'action lié à l'objectif. Format épuré : phrases courtes, une idée par ligne, lignes vides entre blocs. Aucune question."; }
+function wizScript(n){ var r=WIZ[wizCtx.r], v=wizCtx.r!=="facebook"; return wizCtx.base+" Écris maintenant le contenu complet prêt à copier, basé sur l'accroche numéro "+n+" proposée. "+WCONS[wizCtx.r]+" Puis, séparés par une ligne vide et prêts à copier : MOTS-CLÉS (5 à 8 expressions tapées vraiment sur "+r.nom+" pour ce sujet, reprises dans la description), DESCRIPTION OU LÉGENDE, HASHTAGS"+(v?", TEXTE À L'ÉCRAN ET SOUS-TITRES":"")+". Ajoute 3 conseils propres à "+r.nom+" (format, durée, horaire)"+(v?", la musique ou tendance à utiliser (sans inventer de nom précis) et le rythme de montage, en respectant la durée choisie":"")+", et une ligne 'Tendance à exploiter :'. Termine par un appel à l'action lié à l'objectif. Chaque bloc une seule fois, sans doublon. Format épuré : phrases courtes, une idée par ligne, lignes vides entre blocs. Aucune question."; }
 function rendreIdees(liste){ idees.innerHTML=""; liste.forEach(function(t){ var b=document.createElement("button"); b.type="button"; if(t.ico){ t.ico.forEach(function(n){var im=document.createElement("img");im.src="logo-"+n+".png";im.alt=n;im.className="lg";b.appendChild(im);}); b.appendChild(document.createTextNode(" "+t.t)); } else { b.textContent=t.t; } if(t.wz) b.setAttribute("data-wz",t.wz); if(t.wo){ b.setAttribute("data-wo",t.wo); b.setAttribute("data-wk",t.wk); } if(t.wps) b.setAttribute("data-wps",t.wps); if(t.wt) b.setAttribute("data-wt",t.wt); idees.appendChild(b); }); idees.style.display="flex"; fil.scrollTop=fil.scrollHeight; }
 idees.addEventListener("click",function(e){ var bt=e.target.closest?e.target.closest("button"):e.target; if(!bt||bt.tagName!=="BUTTON") return;
 if(bt.getAttribute("data-wiz")){ wiz={step:"reseau"}; ajouter("moi","Post / script pour un réseau social"); ajouter("agent","Sur quel réseau veux-tu poster ?"); rendreIdees(Object.keys(WIZ).map(function(k){ return {t:WIZ[k].nom,ico:[k],wz:k}; })); return; }
