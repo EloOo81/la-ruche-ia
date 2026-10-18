@@ -204,7 +204,7 @@ var AGENTS=[
  url:"https://clarisse-ia.studio-code.workers.dev/leo",
  accueil:"Salut ! Moi c'est Léo. Je transforme vos idées en posts viraux et engageants. Qu'est-ce qu'on publie aujourd'hui ? 🚀",
  invite:"Ce que vous voulez publier…",
- idees:[{t:"Post pro",ico:["linkedin"],pre:"Rédige-moi un post LinkedIn professionnel sur : "},{t:"Post / script",ico:["facebook","instagram","tiktok","youtube"],pre:"Donne-moi une idée de post/script dynamique pour Facebook/Instagram/TikTok/YouTube sur : "},{t:"📍 Nouveauté Google Business",pre:"Rédige une actualité / publication pour ma fiche Google Business sur : "},{t:"⭐ Répondre à un avis client",pre:"Rédige une réponse diplomate et pro à cet avis client : "},{t:"📣 Promo ou annonce",pre:"Prépare un post pour annoncer une promotion/nouveauté sur : "}]},
+ idees:[{t:"Post pro",ico:["linkedin"],pre:"Rédige-moi un post LinkedIn professionnel sur : "},{t:"Post / script",ico:["facebook","instagram","tiktok","youtube"],wiz:"1"},{t:"📍 Nouveauté Google Business",pre:"Rédige une actualité / publication pour ma fiche Google Business sur : "},{t:"⭐ Répondre à un avis client",pre:"Rédige une réponse diplomate et pro à cet avis client : "},{t:"📣 Promo ou annonce",pre:"Prépare un post pour annoncer une promotion/nouveauté sur : "}]},
 {id:"camille",nom:"Camille",emoji:"💻",metier:"Informatique",role:"Assistante web et informatique",
  desc:"Elle vous guide pas à pas pour un souci de téléphone, d'ordinateur, de box ou d'imprimante, et rédige de courts textes pour un site web.",
  url:"https://clarisse-ia.studio-code.workers.dev/camille",
@@ -309,9 +309,9 @@ texte.placeholder=a.invite;
 fil.innerHTML="";
 ajouter("agent",a.accueil);
 hist[a.id].forEach(function(m){ ajouter(m.r==="u"?"moi":"agent",m.t); });
-idees.innerHTML="";
+wiz=null; idees.innerHTML="";
 idees.style.display=hist[a.id].length?"none":"flex";
-a.idees.forEach(function(t){var b=document.createElement("button");b.type="button";if(typeof t==="object"){ if(t.ico){ t.ico.forEach(function(n){var im=document.createElement("img");im.src="logo-"+n+".png";im.alt=n;im.className="lg";b.appendChild(im);}); b.appendChild(document.createTextNode(" "+t.t)); } else { b.textContent=t.t; } b.setAttribute("data-pre",t.pre); }else{b.textContent=t;}idees.appendChild(b);});
+a.idees.forEach(function(t){var b=document.createElement("button");b.type="button";if(typeof t==="object"){ if(t.ico){ t.ico.forEach(function(n){var im=document.createElement("img");im.src="logo-"+n+".png";im.alt=n;im.className="lg";b.appendChild(im);}); b.appendChild(document.createTextNode(" "+t.t)); } else { b.textContent=t.t; } if(t.pre) b.setAttribute("data-pre",t.pre); if(t.wiz) b.setAttribute("data-wiz",t.wiz); }else{b.textContent=t;}idees.appendChild(b);});
 dessinerOnglets();
 if(defiler) document.getElementById("chat").scrollIntoView();
 }
@@ -343,7 +343,7 @@ async function envoyer(message){
 message=message.trim();
 if((!message&&!image)||enCours) return;
 if(!message) message="Voici une capture d'écran. Peux-tu l'analyser ?";
-var a=courant, img=image, vocal=dicte; dicte=false;
+var a=courant, img=image, vocal=dicte; dicte=false; var affiche=message; if(wiz&&wiz.step==="sujet"){ message=wizCompose(message); wiz=null; }
 if(!a.url){
 ajouter("moi",message); texte.value=""; nb.textContent="0";
 ajouter("agent erreur",a.nom+" arrive très bientôt. En attendant, Clarisse est déjà disponible pour vos questions de sécurité.");
@@ -351,7 +351,7 @@ return;
 }
 enCours=true; btn.disabled=true;
 idees.style.display="none";
-ajouter("moi",message+(img?"  📎 (capture jointe)":""));
+ajouter("moi",affiche+(img?"  📎 (capture jointe)":""));
 texte.value=""; nb.textContent="0"; retirerImage();
 var attente=document.createElement("div");
 attente.className="msg agent";
@@ -399,7 +399,15 @@ try{ reco.start(); }catch(e){}
 form.addEventListener("submit",function(e){e.preventDefault();envoyer(texte.value);});
 texte.addEventListener("input",function(){nb.textContent=texte.value.length;});
 texte.addEventListener("keydown",function(e){ if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();envoyer(texte.value);} });
-idees.addEventListener("click",function(e){ var bt=e.target.closest?e.target.closest("button"):e.target; if(!bt||bt.tagName!=="BUTTON") return; var pre=bt.getAttribute("data-pre"); if(pre){ texte.value=pre; nb.textContent=texte.value.length; texte.focus(); try{ texte.setSelectionRange(pre.length,pre.length); }catch(x){} } else { envoyer(bt.textContent); } });
+var wiz=null;
+var WIZ={facebook:{nom:"Facebook",q:"Quel type de publication veux-tu faire ?",ch:["Annonce ou nouveauté","Astuce utile","Coulisses de mon activité","Témoignage client","Question à ma communauté"]},instagram:{nom:"Instagram",q:"Quel format veux-tu ?",ch:["Carrousel","Reel court","Story","Photo avec légende"]},tiktok:{nom:"TikTok",q:"Quel type de vidéo veux-tu poster ?",ch:["Astuce rapide","Avant / après","Coulisses de mon métier","Tendance à détourner","Réponse à une question client"]},youtube:{nom:"YouTube",q:"Quel format veux-tu ?",ch:["Short de moins d'une minute","Vidéo courte de 3 à 5 minutes","Tutoriel","Présentation de mon activité"]}};
+function wizCompose(sujet){ var r=WIZ[wiz.reseau]; return "Donne-moi une idée originale de post ou de script dynamique pour "+r.nom+", de type : "+wiz.type+", sur : "+sujet; }
+function rendreIdees(liste){ idees.innerHTML=""; liste.forEach(function(t){ var b=document.createElement("button"); b.type="button"; if(t.ico){ t.ico.forEach(function(n){var im=document.createElement("img");im.src="logo-"+n+".png";im.alt=n;im.className="lg";b.appendChild(im);}); b.appendChild(document.createTextNode(" "+t.t)); } else { b.textContent=t.t; } if(t.wz) b.setAttribute("data-wz",t.wz); if(t.wt) b.setAttribute("data-wt",t.wt); idees.appendChild(b); }); idees.style.display="flex"; fil.scrollTop=fil.scrollHeight; }
+idees.addEventListener("click",function(e){ var bt=e.target.closest?e.target.closest("button"):e.target; if(!bt||bt.tagName!=="BUTTON") return;
+if(bt.getAttribute("data-wiz")){ wiz={step:"reseau"}; ajouter("moi","Post / script pour un réseau social"); ajouter("agent","Sur quel réseau veux-tu poster ?"); rendreIdees(Object.keys(WIZ).map(function(k){ return {t:WIZ[k].nom,ico:[k],wz:k}; })); return; }
+if(bt.getAttribute("data-wz")){ var k=bt.getAttribute("data-wz"); wiz={step:"type",reseau:k}; ajouter("moi",WIZ[k].nom); ajouter("agent",WIZ[k].q); rendreIdees(WIZ[k].ch.map(function(c){ return {t:c,wt:c}; })); return; }
+if(bt.getAttribute("data-wt")){ wiz.type=bt.getAttribute("data-wt"); wiz.step="sujet"; ajouter("moi",wiz.type); ajouter("agent","Sur quel sujet ? Écris-le dans la case ci-dessous, ou dicte-le avec Parler."); idees.style.display="none"; texte.focus(); return; }
+var pre=bt.getAttribute("data-pre"); if(pre){ wiz=null; texte.value=pre; nb.textContent=texte.value.length; texte.focus(); try{ texte.setSelectionRange(pre.length,pre.length); }catch(x){} } else { envoyer(bt.textContent); } });
 choisir(AGENTS[0],false);
 })();
 </script>
