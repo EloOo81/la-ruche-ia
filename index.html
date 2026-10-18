@@ -343,7 +343,7 @@ async function envoyer(message){
 message=message.trim();
 if((!message&&!image)||enCours) return;
 if(!message) message="Voici une capture d'écran. Peux-tu l'analyser ?";
-var a=courant, img=image, vocal=dicte; dicte=false; var affiche=message; if(wiz&&wiz.step==="sujet"){ wiz.sujet=message; wiz.step="ton"; ajouter("moi",message); texte.value=""; nb.textContent="0"; ajouter("agent","Quel ton veux-tu ?"); rendreIdees(WTON.map(function(c){ return {t:c,wo:c,wk:"ton"}; })); return; } if(affOver){ affiche=affOver; affOver=null; }
+var a=courant, img=image, vocal=dicte; dicte=false; var affiche=message; if(wiz&&wiz.step==="sujet"){ wiz.sujet=message; wiz.step="ton"; ajouter("moi",message); texte.value=""; nb.textContent="0"; ajouter("agent","Quel ton veux-tu ?"); rendreIdees(WTON.map(function(c){ return {t:c,wo:c,wk:"ton",ico:[wiz.reseau]}; })); return; } if(affOver){ affiche=affOver; affOver=null; }
 if(!a.url){
 ajouter("moi",message); texte.value=""; nb.textContent="0";
 ajouter("agent erreur",a.nom+" arrive très bientôt. En attendant, Clarisse est déjà disponible pour vos questions de sécurité.");
@@ -366,7 +366,7 @@ var j=await r.json().catch(function(){return {};});
 attente.remove();
 if(r.ok&&j.reply){
 hist[a.id].push({r:"u",t:message},{r:"c",t:nettoyer(j.reply)});
-if(courant===a){ ajouter("agent",nettoyer(j.reply)); parler(j.reply,vocal); if(wizCtx&&a.id==="leo"&&/accroche/i.test(message)&&!/Écris maintenant/.test(message)){ rendreIdees([1,2,3,4,5].map(function(n){return {t:"Script n°"+n,wps:String(n)};}).concat([{t:"5 autres accroches",wps:"plus"}])); } }
+if(courant===a){ ajouter("agent",nettoyer(j.reply)); parler(j.reply,vocal); if(wizCtx&&a.id==="leo"&&/accroche/i.test(message)&&!/Écris maintenant/.test(message)){ rendreIdees([1,2,3,4,5].map(function(n){return {t:"Script n°"+n,wps:String(n),ico:[wizCtx.r]};}).concat([{t:"5 autres accroches",wps:"plus",ico:[wizCtx.r]}])); } }
 }
 else if(r.status===429){ ajouter("agent erreur","Trop de messages d'un coup. Patientez une minute puis réessayez."); }
 else if(r.status===413){ ajouter("agent erreur","Votre message est trop long (1500 caractères maximum). Collez seulement l'essentiel."); }
@@ -416,8 +416,8 @@ function wizScript(n){ var r=WIZ[wizCtx.r]; return wizCtx.base+" Écris maintena
 function rendreIdees(liste){ idees.innerHTML=""; liste.forEach(function(t){ var b=document.createElement("button"); b.type="button"; if(t.ico){ t.ico.forEach(function(n){var im=document.createElement("img");im.src="logo-"+n+".png";im.alt=n;im.className="lg";b.appendChild(im);}); b.appendChild(document.createTextNode(" "+t.t)); } else { b.textContent=t.t; } if(t.wz) b.setAttribute("data-wz",t.wz); if(t.wo){ b.setAttribute("data-wo",t.wo); b.setAttribute("data-wk",t.wk); } if(t.wps) b.setAttribute("data-wps",t.wps); if(t.wt) b.setAttribute("data-wt",t.wt); idees.appendChild(b); }); idees.style.display="flex"; fil.scrollTop=fil.scrollHeight; }
 idees.addEventListener("click",function(e){ var bt=e.target.closest?e.target.closest("button"):e.target; if(!bt||bt.tagName!=="BUTTON") return;
 if(bt.getAttribute("data-wiz")){ wiz={step:"reseau"}; ajouter("moi","Post / script pour un réseau social"); ajouter("agent","Sur quel réseau veux-tu poster ?"); rendreIdees(Object.keys(WIZ).map(function(k){ return {t:WIZ[k].nom,ico:[k],wz:k}; })); return; }
-if(bt.getAttribute("data-wz")){ var k=bt.getAttribute("data-wz"); wiz={step:"type",reseau:k}; ajouter("moi",WIZ[k].nom); ajouter("agent",WIZ[k].q); rendreIdees(WIZ[k].ch.map(function(c){ return {t:c,wt:c}; })); return; }
-if(bt.getAttribute("data-wk")){ var v=bt.getAttribute("data-wo"); if(bt.getAttribute("data-wk")==="ton"){ wiz.ton=v; wiz.step="obj"; ajouter("moi",v); ajouter("agent","Quel est ton objectif ?"); rendreIdees(WOBJ.map(function(c){ return {t:c,wo:c,wk:"obj"}; })); } else { wiz.obj=v; ajouter("moi",v); idees.style.display="none"; var m=wizCompose(); wiz=null; affOver="Montre-moi les 5 accroches"; envoyer(m); } return; }
+if(bt.getAttribute("data-wz")){ var k=bt.getAttribute("data-wz"); wiz={step:"type",reseau:k}; ajouter("moi",WIZ[k].nom); ajouter("agent",WIZ[k].q); rendreIdees(WIZ[k].ch.map(function(c){ return {t:c,wt:c,ico:[k]}; })); return; }
+if(bt.getAttribute("data-wk")){ var v=bt.getAttribute("data-wo"); if(bt.getAttribute("data-wk")==="ton"){ wiz.ton=v; wiz.step="obj"; ajouter("moi",v); ajouter("agent","Quel est ton objectif ?"); rendreIdees(WOBJ.map(function(c){ return {t:c,wo:c,wk:"obj",ico:[wiz.reseau]}; })); } else { wiz.obj=v; ajouter("moi",v); idees.style.display="none"; var m=wizCompose(); wiz=null; affOver="Montre-moi les 5 accroches"; envoyer(m); } return; }
 if(bt.getAttribute("data-wps")){ var n=bt.getAttribute("data-wps"); if(n==="plus"){ affOver="5 autres accroches"; envoyer(wizCtx.base+" Donne 5 NOUVELLES accroches numérotées de 1 à 5, différentes des précédentes, avec la ligne Mon préféré. Pas de script. Aucune question."); } else { affOver="Écris le contenu avec l'accroche n°"+n; envoyer(wizScript(n)); } return; }
 if(bt.getAttribute("data-wt")){ wiz.type=bt.getAttribute("data-wt"); wiz.step="sujet"; ajouter("moi",wiz.type); ajouter("agent","Sur quel sujet ? Écris-le dans la case ci-dessous, ou dicte-le avec Parler."); idees.style.display="none"; texte.focus(); return; }
 var pre=bt.getAttribute("data-pre"); if(pre){ wiz=null; texte.value=pre; nb.textContent=texte.value.length; texte.focus(); try{ texte.setSelectionRange(pre.length,pre.length); }catch(x){} } else { envoyer(bt.textContent); } });
