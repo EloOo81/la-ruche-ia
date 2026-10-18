@@ -86,6 +86,7 @@ textarea{flex:1;resize:none;min-height:48px;max-height:150px;font:inherit;color:
 textarea::placeholder{color:#5d6aa0}
 textarea:focus-visible{outline:none;border-color:var(--miel);box-shadow:0 0 0 2px rgba(61,232,255,.35)}
 .idees button{color:var(--texte);background:rgba(139,92,246,.16);border:1.5px solid var(--miel2);box-shadow:0 0 0 1px rgba(61,232,255,.18)}
+.idees button.retour{background:transparent;border:1px dashed var(--trait);color:var(--doux);box-shadow:none}
 .idees button:hover,.idees button:active{background:rgba(61,232,255,.14);border-color:var(--miel)}
 .saisie .btn{padding:13px 22px}
 .saisie .btn:disabled{opacity:.5;cursor:wait;transform:none}
@@ -235,7 +236,7 @@ var AGENTS=[
  url:"https://clarisse-ia.studio-code.workers.dev/leo",
  accueil:"Salut ! Moi c'est Léo. Je transforme vos idées en posts viraux et engageants. Qu'est-ce qu'on publie aujourd'hui ? 🚀",
  invite:"Ce que vous voulez publier…",
- idees:[{t:"Post pro",ico:["linkedin"],pre:"Rédige-moi un post LinkedIn professionnel sur : "},{t:"Post / script",ico:["facebook","instagram","tiktok","youtube"],wiz:"1"},{t:"📍 Nouveauté Google Business",pre:"Rédige une actualité / publication pour ma fiche Google Business sur : "},{t:"⭐ Répondre à un avis client",pre:"Rédige une réponse diplomate et pro à cet avis client : "},{t:"📣 Promo ou annonce",pre:"Prépare un post pour annoncer une promotion/nouveauté sur : "}]},
+ idees:[{t:"Post pro",ico:["linkedin"],g:"linkedin"},{t:"Post / script",ico:["facebook","instagram","tiktok","youtube"],wiz:"1"},{t:"📍 Nouveauté Google Business",g:"google"},{t:"⭐ Répondre à un avis client",g:"avis"},{t:"📣 Promo ou annonce",g:"promo"}]},
 {id:"camille",nom:"Camille",emoji:"💻",metier:"Assistante Informatique & Web",role:"Assistante web et informatique",
  desc:"Elle vous guide pas à pas pour un souci de téléphone, d'ordinateur, de box ou d'imprimante, et rédige de courts textes pour un site web.",
  url:"https://clarisse-ia.studio-code.workers.dev/camille",
@@ -370,9 +371,9 @@ texte.placeholder=a.invite;
 fil.innerHTML="";
 ajouter("agent",a.accueil);
 hist[a.id].forEach(function(m){ ajouter(m.r==="u"?"moi":"agent",m.t); });
-wiz=null; idees.innerHTML="";
+wiz=null; pile=[]; texte.value=""; nb.textContent="0"; idees.innerHTML="";
 idees.style.display=hist[a.id].length?"none":"flex";
-a.idees.forEach(function(t){var b=document.createElement("button");b.type="button";if(typeof t==="object"){ if(t.ico){ t.ico.forEach(function(n){var im=document.createElement("img");im.src="logo-"+n+".png";im.alt=n;im.className="lg";b.appendChild(im);}); b.appendChild(document.createTextNode(" "+t.t)); } else { b.textContent=t.t; } if(t.pre) b.setAttribute("data-pre",t.pre); if(t.wiz) b.setAttribute("data-wiz",t.wiz); }else{b.textContent=t;}idees.appendChild(b);});
+initIdees(a);
 dessinerOnglets();
 if(defiler) document.getElementById("chat").scrollIntoView();
 }
@@ -408,7 +409,7 @@ async function envoyer(message){
 message=message.trim();
 if((!message&&!image)||enCours) return;
 if(!message) message="Voici une capture d'écran. Peux-tu l'analyser ?";
-if(chatBox.classList.contains("reduit")) chatBox.classList.remove("reduit"); var a=courant, img=image, vocal=dicte; dicte=false; var affiche=message; if(wiz&&wiz.step==="sujet"){ wiz.sujet=message.slice(0,250); wiz.step="ton"; ajouter("moi",message); texte.value=""; nb.textContent="0"; ajouter("agent","Quel ton veux-tu ?"); rendreIdees(WTON.map(function(c){ return {t:c,wo:c,wk:"ton",ico:[wiz.reseau]}; })); return; } if(affOver){ affiche=affOver; affOver=null; }
+if(chatBox.classList.contains("reduit")) chatBox.classList.remove("reduit"); var a=courant, img=image, vocal=dicte; dicte=false; var affiche=message; if(wiz&&wiz.step==="gsujet"){ snap(); wiz.v.sujet=message.slice(0,wiz.g==="avis"?500:250); wiz.step=null; ajouter("moi",message); texte.value=""; nb.textContent="0"; gNext(); return; } if(wiz&&wiz.step==="sujet"){ snap(); wiz.sujet=message.slice(0,250); wiz.step="ton"; ajouter("moi",message); texte.value=""; nb.textContent="0"; ajouter("agent","Quel ton veux-tu ?"); rendreIdees(WTON.map(function(c){ return {t:c,wo:c,wk:"ton",ico:[wiz.reseau]}; })); return; } if(affOver){ affiche=affOver; affOver=null; }
 if(!a.url){
 ajouter("moi",message); texte.value=""; nb.textContent="0";
 ajouter("agent erreur",a.nom+" arrive très bientôt. En attendant, Clarisse est déjà disponible pour vos questions de sécurité.");
@@ -465,6 +466,42 @@ form.addEventListener("submit",function(e){e.preventDefault();envoyer(texte.valu
 texte.addEventListener("input",function(){nb.textContent=texte.value.length;});
 texte.addEventListener("keydown",function(e){ if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();envoyer(texte.value);} });
 var wiz=null;
+function initIdees(a){ idees.innerHTML=""; listeCour=null; a.idees.forEach(function(t){var b=document.createElement("button");b.type="button";if(typeof t==="object"){ if(t.ico){ t.ico.forEach(function(n){var im=document.createElement("img");im.src="logo-"+n+".png";im.alt=n;im.className="lg";b.appendChild(im);}); b.appendChild(document.createTextNode(" "+t.t)); } else { b.textContent=t.t; } if(t.pre) b.setAttribute("data-pre",t.pre); if(t.wiz) b.setAttribute("data-wiz",t.wiz); if(t.g) b.setAttribute("data-g",t.g); }else{b.textContent=t;}idees.appendChild(b);}); }
+var pile=[], listeCour=null;
+function snap(){ pile.push({w:wiz?JSON.parse(JSON.stringify(wiz)):null,l:listeCour,n:fil.children.length}); }
+var GW={
+linkedin:{btn:"Post pro LinkedIn",nom:"post LinkedIn",steps:["type","sujet","ton","obj"],
+ type:{q:"Quel type de post ?",ch:["Retour d'expérience","Conseil pro","Annonce (projet, offre, nouveau poste)","Prise de position","Réussite ou témoignage client"]},
+ ton:{q:"Quel ton veux-tu ?",ch:["Professionnel","Chaleureux","Inspirant","Direct"]},
+ obj:{q:"Quel est ton objectif ?",ch:["Gagner en visibilité","Trouver des clients","Trouver un emploi ou recruter","Faire réagir"]},
+ sq:"Sur quel sujet ? Écris-le dans la case ci-dessous, ou dicte-le avec Parler.",
+ cons:"LinkedIn : 1re ligne = accroche (visible avant « voir plus », environ 200 caractères), 800 à 1300 caractères, phrases courtes, une idée par ligne, question finale pour les commentaires, 3 à 5 hashtags à la fin, lien de préférence en commentaire.",
+ plus:"Puis, séparés par une ligne vide : HASHTAGS, puis 2 conseils (horaire, format)."},
+google:{btn:"Nouveauté Google Business",nom:"publication pour ma fiche Google Business",steps:["type","sujet","ton","obj"],
+ type:{q:"Quel type de publication ?",ch:["Actualité ou nouveauté","Offre ou promotion","Événement","Horaires ou congés exceptionnels","Nouveau produit ou service"]},
+ ton:{q:"Quel ton veux-tu ?",ch:["Chaleureux","Professionnel","Dynamique"]},
+ obj:{q:"Quel est ton objectif ?",ch:["Faire appeler","Faire venir sur place","Faire réserver","Faire visiter mon site"]},
+ sq:"Quel est le sujet ? Précise ton métier et ta ville si tu veux. Écris-le dans la case ci-dessous, ou dicte-le avec Parler.",
+ cons:"Google Business : 100 à 200 mots, 1re ligne = l'info clé, pas de hashtags, pas de numéro de téléphone dans le texte, mots-clés locaux (métier + ville) placés naturellement, appel à l'action clair.",
+ plus:"Puis, séparés par une ligne vide : BOUTON À CHOISIR (Appeler, Réserver, En savoir plus, Commander ou Offre), MOTS-CLÉS LOCAUX, puis 2 conseils (photo, fréquence)."},
+avis:{btn:"Répondre à un avis client",nom:"réponse à un avis client",steps:["type","ton","obj","sujet"],
+ type:{q:"Quel type d'avis as-tu reçu ?",ch:["Avis positif","Avis négatif","Avis mitigé","Avis injuste ou faux"]},
+ ton:{q:"Quel ton veux-tu ?",ch:["Chaleureux","Professionnel","Diplomate et calme"]},
+ obj:{q:"Que veux-tu faire dans ta réponse ?",ch:["Remercier simplement","Proposer une solution","Inviter à revenir","Proposer d'en parler en privé"]},
+ sq:"Colle ici le texte de l'avis du client, dans la case ci-dessous.",
+ cons:"Réponse à un avis : 3 à 6 lignes, remercie, reconnais ce qui est dit sans te justifier ni accuser, aucune donnée personnelle, ne promets que ce qui est tenable, signature simple.",
+ plus:"Donne une version principale puis une version plus courte, séparées par une ligne vide. Si l'avis est faux ou injuste, ajoute 1 conseil : le signaler à Google."},
+promo:{btn:"Promo ou annonce",nom:"annonce promo",steps:["reseau","type","sujet","ton","obj"],
+ reseau:{q:"Pour quel réseau ?",ch:["Facebook","Instagram","LinkedIn","Google Business"],ico:{Facebook:"facebook",Instagram:"instagram",LinkedIn:"linkedin"}},
+ type:{q:"Quel type d'annonce ?",ch:["Promotion ou réduction","Nouveau produit ou service","Ouverture ou événement","Offre limitée dans le temps"]},
+ ton:{q:"Quel ton veux-tu ?",ch:["Enthousiaste","Professionnel","Chaleureux"]},
+ obj:{q:"Quel est ton objectif ?",ch:["Faire acheter ou réserver","Faire contacter","Faire partager"]},
+ sq:"Quels sont les détails (offre, prix, dates) ? Écris-les dans la case ci-dessous, ou dicte-les avec Parler.",
+ cons:"Annonce : 1re ligne = bénéfice ou prix clair, conditions et date limite précises, un seul appel à l'action. Utilise uniquement les infos données, n'invente ni prix ni date. Adapte au réseau (Instagram : légende + 5 à 8 hashtags ; Facebook : 0 à 3 hashtags ; LinkedIn : ton pro, 3 à 5 hashtags ; Google Business : sans hashtags, bouton d'action).",
+ plus:"Puis, séparés par une ligne vide : HASHTAGS (sauf Google Business), puis 2 conseils."}
+};
+function gCompose(){ var g=GW[wiz.g], v=wiz.v; return "Écris, prêt à copier : "+g.nom+"."+(v.reseau?" Réseau : "+v.reseau+".":"")+" Type : "+v.type+". Sujet : "+v.sujet+". Ton : "+v.ton+". Objectif : "+v.obj+". "+g.cons+" "+g.plus+" Format épuré : phrases courtes, une idée par ligne, lignes vides entre blocs. Aucune question, aucune introduction."; }
+function gNext(){ var g=GW[wiz.g]; wiz.i++; if(wiz.i>=g.steps.length){ idees.style.display="none"; var m=gCompose(); var lab=g.btn; wiz=null; pile=[]; affOver="Rédige : "+lab; envoyer(m); return; } var st=g.steps[wiz.i]; if(st==="sujet"){ wiz.step="gsujet"; ajouter("agent",g.sq); rendreIdees([]); texte.focus(); } else { wiz.step=null; ajouter("agent",g[st].q); rendreIdees(g[st].ch.map(function(c){ var o={t:c,gs:st,gv:c}; if(g[st].ico&&g[st].ico[c]) o.ico=[g[st].ico[c]]; return o; })); } }
 var WIZ={facebook:{nom:"Facebook",q:"Quel type de publication veux-tu faire ?",ch:["Annonce ou nouveauté","Astuce utile","Coulisses de mon activité","Témoignage client","Question à ma communauté"]},instagram:{nom:"Instagram",q:"Quel format veux-tu ?",ch:["Carrousel","Reel court","Story","Photo avec légende"]},tiktok:{nom:"TikTok",q:"Quel type de vidéo veux-tu poster ?",ch:["Astuce rapide","Avant / après","Coulisses de mon métier","Tendance à détourner","Réponse à une question client"]},youtube:{nom:"YouTube",q:"Quel format veux-tu ?",ch:["Short de moins d'une minute","Vidéo courte de 3 à 5 minutes","Tutoriel","Présentation de mon activité"]}};
 var WCONS={
 facebook:"Facebook : accroche dans les 2 premières lignes, ton chaleureux et local, 3 à 6 lignes aérées, question finale pour les commentaires. Hashtags : 0 à 3. Description = le post, lien ou appel à message en dernière ligne.",
@@ -479,13 +516,18 @@ var affOver=null, wizCtx=null;
 function wizBase(){ var r=WIZ[wiz.reseau]; return "Contenu "+r.nom+" de type : "+wiz.type+". Sujet : "+wiz.sujet+". Ton : "+wiz.ton+". Objectif : "+wiz.obj+"."+(wiz.duree?" Durée de la vidéo : "+wiz.duree+".":""); }
 function wizCompose(){ var r=WIZ[wiz.reseau]; wizCtx={r:wiz.reseau,base:wizBase()}; return wizBase()+" Donne UNIQUEMENT 5 TITRES D'ACCROCHE différents, numérotés de 1 à 5, percutants et spécifiques à "+r.nom+" (curiosité, chiffre, erreur à éviter, avant/après, question choc), adaptés au ton et à l'objectif. Puis une seule ligne : Mon préféré : numéro X, parce que. N'écris pas encore le script ni le post. Appuie-toi sur les formats qui marchent sur "+r.nom+", sans inventer de chiffres. Aucune question."; }
 function wizScript(n){ var r=WIZ[wizCtx.r], v=wizCtx.r!=="facebook"; return wizCtx.base+" Écris maintenant le contenu complet prêt à copier, basé sur l'accroche numéro "+n+" proposée. "+WCONS[wizCtx.r]+" Puis, séparés par une ligne vide et prêts à copier : MOTS-CLÉS (5 à 8 expressions tapées vraiment sur "+r.nom+" pour ce sujet, reprises dans la description), DESCRIPTION OU LÉGENDE, HASHTAGS"+(v?", TEXTE À L'ÉCRAN ET SOUS-TITRES":"")+". Ajoute 3 conseils propres à "+r.nom+" (format, durée, horaire)"+(v?", la musique ou tendance à utiliser (sans inventer de nom précis) et le rythme de montage, en respectant la durée choisie":"")+", et une ligne 'Tendance à exploiter :'. Termine par un appel à l'action lié à l'objectif. Chaque bloc une seule fois, sans doublon. Format épuré : phrases courtes, une idée par ligne, lignes vides entre blocs. Aucune question."; }
-function rendreIdees(liste){ idees.innerHTML=""; liste.forEach(function(t){ var b=document.createElement("button"); b.type="button"; if(t.ico){ t.ico.forEach(function(n){var im=document.createElement("img");im.src="logo-"+n+".png";im.alt=n;im.className="lg";b.appendChild(im);}); b.appendChild(document.createTextNode(" "+t.t)); } else { b.textContent=t.t; } if(t.wz) b.setAttribute("data-wz",t.wz); if(t.wo){ b.setAttribute("data-wo",t.wo); b.setAttribute("data-wk",t.wk); } if(t.wps) b.setAttribute("data-wps",t.wps); if(t.wt) b.setAttribute("data-wt",t.wt); idees.appendChild(b); }); idees.style.display="flex"; fil.scrollTop=fil.scrollHeight; }
+function rendreIdees(liste){ idees.innerHTML=""; listeCour=liste; liste.forEach(function(t){ var b=document.createElement("button"); b.type="button"; if(t.ico){ t.ico.forEach(function(n){var im=document.createElement("img");im.src="logo-"+n+".png";im.alt=n;im.className="lg";b.appendChild(im);}); b.appendChild(document.createTextNode(" "+t.t)); } else { b.textContent=t.t; } if(t.wz) b.setAttribute("data-wz",t.wz); if(t.wo){ b.setAttribute("data-wo",t.wo); b.setAttribute("data-wk",t.wk); } if(t.wps) b.setAttribute("data-wps",t.wps); if(t.wt) b.setAttribute("data-wt",t.wt); if(t.gs){ b.setAttribute("data-gs",t.gs); b.setAttribute("data-gv",t.gv); } idees.appendChild(b); }); if(pile.length){ var rb=document.createElement("button"); rb.type="button"; rb.className="retour"; rb.setAttribute("data-retour","1"); rb.textContent="↩ Retour"; idees.insertBefore(rb,idees.firstChild); } idees.style.display="flex"; fil.scrollTop=fil.scrollHeight; }
 idees.addEventListener("click",function(e){ var bt=e.target.closest?e.target.closest("button"):e.target; if(!bt||bt.tagName!=="BUTTON") return;
+if(!bt.getAttribute("data-pre")&&!bt.getAttribute("data-retour")&&texte.value&&!(wiz&&(wiz.step==="sujet"||wiz.step==="gsujet"))){ texte.value=""; nb.textContent="0"; }
+if(bt.getAttribute("data-retour")){ var sp=pile.pop(); if(!sp) return; while(fil.children.length>sp.n) fil.removeChild(fil.lastChild); wiz=sp.w; texte.value=""; nb.textContent="0"; if(sp.l===null){ initIdees(courant); idees.style.display="flex"; } else { rendreIdees(sp.l); } return; }
+if(bt.getAttribute("data-g")){ snap(); var gk=bt.getAttribute("data-g"); wiz={g:gk,i:-1,v:{}}; texte.value=""; nb.textContent="0"; ajouter("moi",GW[gk].btn); gNext(); return; }
+if(bt.getAttribute("data-gs")){ snap(); var gv=bt.getAttribute("data-gv"); wiz.v[bt.getAttribute("data-gs")]=gv; ajouter("moi",gv); gNext(); return; }
+if(bt.getAttribute("data-wiz")||bt.getAttribute("data-wz")||bt.getAttribute("data-wk")||bt.getAttribute("data-wt")) snap();
 if(bt.getAttribute("data-wiz")){ wiz={step:"reseau"}; ajouter("moi","Post / script pour un réseau social"); ajouter("agent","Sur quel réseau veux-tu poster ?"); rendreIdees(Object.keys(WIZ).map(function(k){ return {t:WIZ[k].nom,ico:[k],wz:k}; })); return; }
 if(bt.getAttribute("data-wz")){ var k=bt.getAttribute("data-wz"); wiz={step:"type",reseau:k}; ajouter("moi",WIZ[k].nom); ajouter("agent",WIZ[k].q); rendreIdees(WIZ[k].ch.map(function(c){ return {t:c,wt:c,ico:[k]}; })); return; }
-if(bt.getAttribute("data-wk")){ var v=bt.getAttribute("data-wo"); if(bt.getAttribute("data-wk")==="ton"){ wiz.ton=v; wiz.step="obj"; ajouter("moi",v); ajouter("agent","Quel est ton objectif ?"); rendreIdees(WOBJ.map(function(c){ return {t:c,wo:c,wk:"obj",ico:[wiz.reseau]}; })); } else if(bt.getAttribute("data-wk")==="duree"){ wiz.duree=v; ajouter("moi",v); idees.style.display="none"; var m2=wizCompose(); wiz=null; affOver="Montre-moi les 5 accroches"; envoyer(m2); } else { wiz.obj=v; ajouter("moi",v); if(wiz.reseau!=="facebook"){ wiz.step="duree"; ajouter("agent","Quelle durée pour la vidéo ?"); rendreIdees(WDUR.map(function(c){ return {t:c,wo:c,wk:"duree",ico:[wiz.reseau]}; })); return; } idees.style.display="none"; var m=wizCompose(); wiz=null; affOver="Montre-moi les 5 accroches"; envoyer(m); } return; }
+if(bt.getAttribute("data-wk")){ var v=bt.getAttribute("data-wo"); if(bt.getAttribute("data-wk")==="ton"){ wiz.ton=v; wiz.step="obj"; ajouter("moi",v); ajouter("agent","Quel est ton objectif ?"); rendreIdees(WOBJ.map(function(c){ return {t:c,wo:c,wk:"obj",ico:[wiz.reseau]}; })); } else if(bt.getAttribute("data-wk")==="duree"){ wiz.duree=v; ajouter("moi",v); idees.style.display="none"; var m2=wizCompose(); wiz=null; pile=[]; affOver="Montre-moi les 5 accroches"; envoyer(m2); } else { wiz.obj=v; ajouter("moi",v); if(wiz.reseau!=="facebook"){ wiz.step="duree"; ajouter("agent","Quelle durée pour la vidéo ?"); rendreIdees(WDUR.map(function(c){ return {t:c,wo:c,wk:"duree",ico:[wiz.reseau]}; })); return; } idees.style.display="none"; var m=wizCompose(); wiz=null; pile=[]; affOver="Montre-moi les 5 accroches"; envoyer(m); } return; }
 if(bt.getAttribute("data-wps")){ var n=bt.getAttribute("data-wps"); if(n==="plus"){ affOver="5 autres accroches"; envoyer(wizCtx.base+" Donne 5 NOUVELLES accroches numérotées de 1 à 5, différentes des précédentes, avec la ligne Mon préféré. Pas de script. Aucune question."); } else { affOver="Écris le contenu avec l'accroche n°"+n; envoyer(wizScript(n)); } return; }
-if(bt.getAttribute("data-wt")){ wiz.type=bt.getAttribute("data-wt"); wiz.step="sujet"; ajouter("moi",wiz.type); ajouter("agent","Sur quel sujet ? Écris-le dans la case ci-dessous, ou dicte-le avec Parler."); idees.style.display="none"; texte.focus(); return; }
+if(bt.getAttribute("data-wt")){ wiz.type=bt.getAttribute("data-wt"); wiz.step="sujet"; ajouter("moi",wiz.type); ajouter("agent","Sur quel sujet ? Écris-le dans la case ci-dessous, ou dicte-le avec Parler."); rendreIdees([]); texte.focus(); return; }
 var pre=bt.getAttribute("data-pre"); if(pre){ wiz=null; texte.value=pre; nb.textContent=texte.value.length; texte.focus(); try{ texte.setSelectionRange(pre.length,pre.length); }catch(x){} } else { envoyer(bt.textContent); } });
 choisir(AGENTS.filter(function(x){return x.id==="leo";})[0]||AGENTS[0],false);
 })();
