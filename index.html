@@ -74,6 +74,9 @@ h2{font-size:clamp(1.5rem,4vw,2.1rem);margin-bottom:8px;letter-spacing:-.01em}
 .saisie{display:flex;gap:10px;padding:14px 16px;border-top:1px solid var(--trait);align-items:flex-end}
 textarea{flex:1;resize:none;min-height:48px;max-height:150px;font:inherit;color:var(--texte);background:var(--nuit);border:1px solid var(--trait);border-radius:14px;padding:12px 14px}
 textarea::placeholder{color:#5d6aa0}
+textarea:focus-visible{outline:none;border-color:var(--miel);box-shadow:0 0 0 2px rgba(61,232,255,.35)}
+.idees button{color:var(--texte);background:rgba(139,92,246,.16);border:1.5px solid var(--miel2);box-shadow:0 0 0 1px rgba(61,232,255,.18)}
+.idees button:hover,.idees button:active{background:rgba(61,232,255,.14);border-color:var(--miel)}
 .saisie .btn{padding:13px 22px}
 .saisie .btn:disabled{opacity:.5;cursor:wait;transform:none}
 .micro{background:transparent;color:var(--texte);border:1px solid var(--trait);box-shadow:none}
