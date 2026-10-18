@@ -117,9 +117,9 @@ La Ruche IA
 
 <main id="haut">
 <div class="hero">
-<span class="pastille">Gratuit pour essayer · en français</span>
-<h1>Votre ruche d'<span>agents IA</span></h1>
-<p class="phrase">Protégez-vous, simplifiez-vous la vie avec vos agents IA.</p>
+<span class="pastille">7 experts IA dans votre équipe · gratuit pour essayer</span>
+<h1>7 <span>agents IA</span> spécialisés à votre service</h1>
+<p class="phrase">Réseaux sociaux, sécurité, secrétariat, traduction, orientation, développement web… Une équipe complète, disponible 24h/24, en français. 15 messages gratuits par jour pour essayer.</p>
 <a class="btn" href="#chat">Choisir un agent</a>
 </div>
 
@@ -152,7 +152,7 @@ La Ruche IA
 
 <section id="agents" aria-labelledby="t-agents">
 <h2 id="t-agents">Une ruche, sept agents</h2>
-<p class="sous">Chaque agent a un métier. Cliquez sur une carte pour lui parler.</p>
+<p class="sous">Un seul site pour échanger avec tous vos agents selon vos besoins. Chaque agent a son métier : cliquez sur une carte pour lui parler.</p>
 <div class="grille" id="grille"></div>
 </section>
 
@@ -181,43 +181,43 @@ La Ruche IA
 (function(){
 /* Pour mettre un agent en ligne : remplacer null par l'adresse de son Worker. */
 var AGENTS=[
-{id:"clarisse",nom:"Clarisse",emoji:"🛡️",metier:"Sécurité",role:"Agente de sécurité",
+{id:"clarisse",nom:"Clarisse",emoji:"🛡️",metier:"Experte Sécurité & Anti-arnaque",role:"Agente de sécurité",
  desc:"Elle analyse un SMS, un e-mail ou une capture d'écran suspects et vous dit si c'est une arnaque. Elle vous aide aussi si votre compte est piraté.",
  url:"https://clarisse-ia.studio-code.workers.dev/",
  accueil:"Bonjour, je suis Clarisse. Collez ici un message qui vous paraît louche, ou posez-moi une question de sécurité. Je ne vous demanderai jamais de mot de passe, de code ou de numéro de carte.",
  invite:"Collez ici le message suspect…",
  idees:["Colissimo : colis bloqué, payez 1,99 € de frais","Mon compte a été piraté, que faire ?","Comment créer un mot de passe solide ?"]},
-{id:"hugo",nom:"Hugo",emoji:"✉️",metier:"Secrétaire",role:"Secrétaire virtuel",
+{id:"hugo",nom:"Hugo",emoji:"✉️",metier:"Secrétaire & Formulaires",role:"Secrétaire virtuel",
  desc:"Il rédige vos e-mails et courriers, relance un devis, résume un long message et corrige vos fautes. Vous relisez et envoyez.",
  url:"https://clarisse-ia.studio-code.workers.dev/hugo",
  accueil:"Bonjour, je suis Hugo, votre secrétaire virtuel. Collez un e-mail à traiter ou dites-moi ce qu'il faut relancer, et je prépare le texte. C'est vous qui relisez et envoyez.",
  invite:"Collez un e-mail ou décrivez ce qu'il faut rédiger…",
  idees:["Relancer un devis resté sans réponse","Répondre poliment à un client mécontent","Corriger les fautes de mon texte"]},
-{id:"lina",nom:"Lina",emoji:"🌍",metier:"Traduction",role:"Traduction et adaptation culturelle",
+{id:"lina",nom:"Lina",emoji:"🌍",metier:"Experte Traduction",role:"Traduction et adaptation culturelle",
  desc:"Elle traduit vos textes et les adapte à la culture et au public du pays visé. Pour un document officiel, il faut un traducteur assermenté.",
  url:"https://clarisse-ia.studio-code.workers.dev/lina",
  accueil:"Bonjour, je suis Lina. Donnez-moi votre texte, la langue et le pays visés, et je le traduis en l'adaptant à votre public. Pour un document officiel, il faudra un traducteur assermenté.",
  invite:"Collez le texte à traduire et indiquez la langue visée…",
  idees:["Traduire ma présentation en anglais","Écrire à un client en Espagne","Adapter mon texte pour un public allemand"]},
-{id:"leo",nom:"Léo",emoji:"📱",metier:"Réseaux sociaux",role:"Réseaux sociaux",
+{id:"leo",nom:"Léo",emoji:"📱",metier:"Expert Réseaux Sociaux & Vidéo",role:"Réseaux sociaux",
  desc:"Il écrit vos publications Facebook, Instagram, Google Business et TikTok, avec hashtags et idées de vidéos. Vous publiez vous-même.",
  url:"https://clarisse-ia.studio-code.workers.dev/leo",
  accueil:"Salut ! Moi c'est Léo. Je transforme vos idées en posts viraux et engageants. Qu'est-ce qu'on publie aujourd'hui ? 🚀",
  invite:"Ce que vous voulez publier…",
  idees:[{t:"Post pro",ico:["linkedin"],pre:"Rédige-moi un post LinkedIn professionnel sur : "},{t:"Post / script",ico:["facebook","instagram","tiktok","youtube"],wiz:"1"},{t:"📍 Nouveauté Google Business",pre:"Rédige une actualité / publication pour ma fiche Google Business sur : "},{t:"⭐ Répondre à un avis client",pre:"Rédige une réponse diplomate et pro à cet avis client : "},{t:"📣 Promo ou annonce",pre:"Prépare un post pour annoncer une promotion/nouveauté sur : "}]},
-{id:"camille",nom:"Camille",emoji:"💻",metier:"Informatique",role:"Assistante web et informatique",
+{id:"camille",nom:"Camille",emoji:"💻",metier:"Assistante Informatique & Web",role:"Assistante web et informatique",
  desc:"Elle vous guide pas à pas pour un souci de téléphone, d'ordinateur, de box ou d'imprimante, et rédige de courts textes pour un site web.",
  url:"https://clarisse-ia.studio-code.workers.dev/camille",
  accueil:"Bonjour, je suis Camille. Dites-moi quel appareil vous utilisez et ce qui ne va pas, et je vous guide pas à pas. Je ne vois pas votre écran : décrivez-moi ce que vous voyez.",
  invite:"Décrivez votre problème et votre appareil…",
  idees:["Mon wifi coupe tout le temps","Mon téléphone n'a plus de place","C'est quoi un nom de domaine ?"]},
-{id:"theo",nom:"Théo",emoji:"🎓",metier:"Orientation & carrière",role:"Orientation et carrière",
+{id:"theo",nom:"Théo",emoji:"🎓",metier:"Conseiller Orientation & Carrière",role:"Orientation et carrière",
  desc:"Il vous aide à écrire un CV et une lettre de motivation, à préparer un entretien, à améliorer LinkedIn et à trouver votre voie.",
  url:"https://clarisse-ia.studio-code.workers.dev/theo",
  accueil:"Bonjour, je suis Théo. Je vous aide à écrire votre CV ou votre lettre, à préparer un entretien, à analyser une offre ou à trouver une piste de métier. Je ne vois pas les offres en ligne : collez le texte de celle qui vous intéresse.",
  invite:"Dites-moi ce que vous cherchez : CV, lettre, entretien, orientation…",
  idees:["Faire mon CV étape par étape","M'entraîner à un entretien d'embauche","Quel métier pourrait me convenir ?"]},
-{id:"maya",nom:"Maya",emoji:"🎮",metier:"Web, apps & jeux",role:"Studio web, applications et jeux",
+{id:"maya",nom:"Maya",emoji:"🎮",metier:"Studio Web, Apps & Jeux",role:"Studio web, applications et jeux",
  desc:"Elle conçoit de petits sites, calculateurs, widgets et mini-jeux en HTML, CSS et JavaScript. Elle vous donne le code et vous explique comment l'essayer.",
  url:"https://clarisse-ia.studio-code.workers.dev/maya",
  accueil:"Bonjour, je suis Maya. Dites-moi ce que vous voulez créer : une page, un calculateur, un mini-jeu. Je vous écris le code et je vous explique comment l'ouvrir chez vous. Je ne peux pas héberger votre création sur ce site.",
@@ -343,7 +343,7 @@ async function envoyer(message){
 message=message.trim();
 if((!message&&!image)||enCours) return;
 if(!message) message="Voici une capture d'écran. Peux-tu l'analyser ?";
-var a=courant, img=image, vocal=dicte; dicte=false; var affiche=message; if(wiz&&wiz.step==="sujet"){ message=wizCompose(message); wiz=null; }
+var a=courant, img=image, vocal=dicte; dicte=false; var affiche=message; if(wiz&&wiz.step==="sujet"){ wiz.sujet=message; wiz.step="ton"; ajouter("moi",message); texte.value=""; nb.textContent="0"; ajouter("agent","Quel ton veux-tu ?"); rendreIdees(WTON.map(function(c){ return {t:c,wo:c,wk:"ton"}; })); return; } if(affOver){ affiche=affOver; affOver=null; }
 if(!a.url){
 ajouter("moi",message); texte.value=""; nb.textContent="0";
 ajouter("agent erreur",a.nom+" arrive très bientôt. En attendant, Clarisse est déjà disponible pour vos questions de sécurité.");
@@ -366,7 +366,7 @@ var j=await r.json().catch(function(){return {};});
 attente.remove();
 if(r.ok&&j.reply){
 hist[a.id].push({r:"u",t:message},{r:"c",t:nettoyer(j.reply)});
-if(courant===a){ ajouter("agent",nettoyer(j.reply)); parler(j.reply,vocal); }
+if(courant===a){ ajouter("agent",nettoyer(j.reply)); parler(j.reply,vocal); if(wizCtx&&a.id==="leo"&&/accroche/i.test(message)&&!/Écris maintenant/.test(message)){ rendreIdees([1,2,3,4,5].map(function(n){return {t:"Script n°"+n,wps:String(n)};}).concat([{t:"5 autres accroches",wps:"plus"}])); } }
 }
 else if(r.status===429){ ajouter("agent erreur","Trop de messages d'un coup. Patientez une minute puis réessayez."); }
 else if(r.status===413){ ajouter("agent erreur","Votre message est trop long (1500 caractères maximum). Collez seulement l'essentiel."); }
@@ -407,11 +407,18 @@ instagram:"Règles Instagram : première ligne de la légende = accroche qui don
 tiktok:"Règles TikTok : les 2 premières secondes décident de tout, accroche parlée ET écrite à l'écran, vidéo de 15 à 30 secondes, rythme rapide avec changement de plan toutes les 2-3 secondes, sous-titres obligatoires, fin qui donne envie de revoir ou de commenter, 3 à 5 hashtags dont un de niche. Donne le script seconde par seconde.",
 youtube:"Règles YouTube : le titre (60 caractères max) et la miniature font 80 % du succès, promesse claire dès les 5 premières secondes, structure accroche, contenu, appel à s'abonner, description avec mots-clés en début, 3 à 5 hashtags. Pour un Short : moins de 40 secondes, boucle qui donne envie de revoir."
 };
-function wizCompose(sujet){ var r=WIZ[wiz.reseau]; return "Prépare-moi un contenu "+r.nom+" de type : "+wiz.type+", sur : "+sujet+". Réponds EXACTEMENT dans cet ordre : 1) 5 TITRES D'ACCROCHE différents, numérotés, percutants et spécifiques à "+r.nom+" (curiosité, chiffre, erreur à éviter, avant/après, question choc), puis dis lequel tu recommandes et pourquoi en une phrase. 2) Le post ou script complet prêt à copier, basé sur ton accroche recommandée. 3) 3 conseils concrets spécifiques à "+r.nom+" pour que ça fonctionne (format, durée, horaire de publication, hashtags). "+WCONS[wiz.reseau]+" Appuie-toi sur les formats et tendances qui marchent actuellement sur "+r.nom+" (types de vidéos, styles de montage, façons d'écrire les accroches), sans inventer de chiffres ni de noms de sons précis. Termine par une ligne 'Tendance à exploiter :' avec le format du moment le plus adapté à mon sujet. Ne me pose aucune question, écris directement."; }
-function rendreIdees(liste){ idees.innerHTML=""; liste.forEach(function(t){ var b=document.createElement("button"); b.type="button"; if(t.ico){ t.ico.forEach(function(n){var im=document.createElement("img");im.src="logo-"+n+".png";im.alt=n;im.className="lg";b.appendChild(im);}); b.appendChild(document.createTextNode(" "+t.t)); } else { b.textContent=t.t; } if(t.wz) b.setAttribute("data-wz",t.wz); if(t.wt) b.setAttribute("data-wt",t.wt); idees.appendChild(b); }); idees.style.display="flex"; fil.scrollTop=fil.scrollHeight; }
+var WTON=["Dynamique","Éducatif","Humoristique","Sérieux / pro"];
+var WOBJ=["Faire cliquer sur un lien","Faire s'abonner","Faire commenter","Faire acheter / réserver"];
+var affOver=null, wizCtx=null;
+function wizBase(){ var r=WIZ[wiz.reseau]; return "Contenu "+r.nom+" de type : "+wiz.type+". Sujet : "+wiz.sujet+". Ton : "+wiz.ton+". Objectif : "+wiz.obj+"."; }
+function wizCompose(){ var r=WIZ[wiz.reseau]; wizCtx={r:wiz.reseau,base:wizBase()}; return wizBase()+" Donne UNIQUEMENT 5 TITRES D'ACCROCHE différents, numérotés de 1 à 5, percutants et spécifiques à "+r.nom+" (curiosité, chiffre, erreur à éviter, avant/après, question choc), adaptés au ton et à l'objectif. Puis une seule ligne : Mon préféré : numéro X, parce que. N'écris pas encore le script ni le post. Appuie-toi sur les formats qui marchent sur "+r.nom+", sans inventer de chiffres. Aucune question."; }
+function wizScript(n){ var r=WIZ[wizCtx.r]; return wizCtx.base+" Écris maintenant le contenu complet prêt à copier, basé sur l'accroche numéro "+n+" que tu viens de proposer. "+WCONS[wizCtx.r]+" Ajoute ensuite 3 conseils concrets spécifiques à "+r.nom+" (format, durée, horaire, hashtags) et une ligne 'Tendance à exploiter :' avec un format qui marche en ce moment, sans inventer de chiffres ni de noms de sons. Termine par un appel à l'action clair correspondant à l'objectif. Aucune question."; }
+function rendreIdees(liste){ idees.innerHTML=""; liste.forEach(function(t){ var b=document.createElement("button"); b.type="button"; if(t.ico){ t.ico.forEach(function(n){var im=document.createElement("img");im.src="logo-"+n+".png";im.alt=n;im.className="lg";b.appendChild(im);}); b.appendChild(document.createTextNode(" "+t.t)); } else { b.textContent=t.t; } if(t.wz) b.setAttribute("data-wz",t.wz); if(t.wo){ b.setAttribute("data-wo",t.wo); b.setAttribute("data-wk",t.wk); } if(t.wps) b.setAttribute("data-wps",t.wps); if(t.wt) b.setAttribute("data-wt",t.wt); idees.appendChild(b); }); idees.style.display="flex"; fil.scrollTop=fil.scrollHeight; }
 idees.addEventListener("click",function(e){ var bt=e.target.closest?e.target.closest("button"):e.target; if(!bt||bt.tagName!=="BUTTON") return;
 if(bt.getAttribute("data-wiz")){ wiz={step:"reseau"}; ajouter("moi","Post / script pour un réseau social"); ajouter("agent","Sur quel réseau veux-tu poster ?"); rendreIdees(Object.keys(WIZ).map(function(k){ return {t:WIZ[k].nom,ico:[k],wz:k}; })); return; }
 if(bt.getAttribute("data-wz")){ var k=bt.getAttribute("data-wz"); wiz={step:"type",reseau:k}; ajouter("moi",WIZ[k].nom); ajouter("agent",WIZ[k].q); rendreIdees(WIZ[k].ch.map(function(c){ return {t:c,wt:c}; })); return; }
+if(bt.getAttribute("data-wk")){ var v=bt.getAttribute("data-wo"); if(bt.getAttribute("data-wk")==="ton"){ wiz.ton=v; wiz.step="obj"; ajouter("moi",v); ajouter("agent","Quel est ton objectif ?"); rendreIdees(WOBJ.map(function(c){ return {t:c,wo:c,wk:"obj"}; })); } else { wiz.obj=v; ajouter("moi",v); idees.style.display="none"; var m=wizCompose(); wiz=null; affOver="Montre-moi les 5 accroches"; envoyer(m); } return; }
+if(bt.getAttribute("data-wps")){ var n=bt.getAttribute("data-wps"); if(n==="plus"){ affOver="5 autres accroches"; envoyer(wizCtx.base+" Donne 5 NOUVELLES accroches numérotées de 1 à 5, différentes des précédentes, avec la ligne Mon préféré. Pas de script. Aucune question."); } else { affOver="Écris le contenu avec l'accroche n°"+n; envoyer(wizScript(n)); } return; }
 if(bt.getAttribute("data-wt")){ wiz.type=bt.getAttribute("data-wt"); wiz.step="sujet"; ajouter("moi",wiz.type); ajouter("agent","Sur quel sujet ? Écris-le dans la case ci-dessous, ou dicte-le avec Parler."); idees.style.display="none"; texte.focus(); return; }
 var pre=bt.getAttribute("data-pre"); if(pre){ wiz=null; texte.value=pre; nb.textContent=texte.value.length; texte.focus(); try{ texte.setSelectionRange(pre.length,pre.length); }catch(x){} } else { envoyer(bt.textContent); } });
 choisir(AGENTS[0],false);
