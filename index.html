@@ -65,23 +65,23 @@ h2{font-size:clamp(1.5rem,4vw,2.1rem);margin-bottom:8px;letter-spacing:-.01em}
 .chat-tete small{color:var(--menthe)}
 .voix{margin-left:auto;font:inherit;font-size:.85rem;color:var(--doux);background:transparent;border:1px solid var(--trait);border-radius:99px;padding:8px 14px;cursor:pointer;white-space:nowrap}
 .voix[aria-pressed=true]{color:#2a0a1a;background:var(--menthe);border-color:var(--menthe);font-weight:700}
-.fil{height:auto;min-height:80px;max-height:min(46vh,430px);overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:12px;scroll-behavior:smooth}
-.msg{max-width:88%;padding:12px 16px;border-radius:16px;white-space:pre-wrap;word-wrap:break-word;font-size:.98rem}
+.fil{padding-bottom:26px;height:auto;min-height:80px;max-height:min(46vh,430px);overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:12px;scroll-behavior:smooth}
+.msg{max-width:88%;line-height:1.65;padding:14px 16px;border-radius:16px;white-space:pre-wrap;word-wrap:break-word;font-size:.98rem}
 .msg.agent{background:#182050;border:1px solid var(--trait);border-top-left-radius:4px;align-self:flex-start}
 .msg.moi{background:linear-gradient(90deg,var(--miel),var(--miel2));color:#06102b;font-weight:600;border-top-right-radius:4px;align-self:flex-end}
 .copier{display:block;margin-top:10px;font:inherit;font-size:.82rem;color:var(--texte);background:transparent;border:1px solid var(--trait);border-radius:99px;padding:6px 14px;cursor:pointer}
-.bloc{margin:0 0 12px}.bloc .lbl{font-weight:700;font-size:.82rem;opacity:.75;margin-bottom:3px}.bloc .txt{white-space:pre-wrap}.bloc .lig{display:flex;gap:8px;align-items:flex-start;margin:4px 0}.bloc .lig span{flex:1}.cpb{flex:none;font:inherit;font-size:.9rem;line-height:1;background:transparent;border:1px solid var(--trait);border-radius:8px;padding:5px 8px;cursor:pointer;margin-top:4px;color:var(--texte)}.lig .cpb{margin-top:0}.cpb:hover,.cpb:active{border-color:var(--miel);background:rgba(61,232,255,.12)}
+.bloc{margin:0 0 18px}.bloc:last-child{margin-bottom:0}.bloc .lbl{font-weight:700;font-size:.82rem;opacity:.75;margin-bottom:3px}.bloc .txt{white-space:pre-wrap}.bloc .lig{display:flex;gap:8px;align-items:flex-start;margin:4px 0}.bloc .lig span{flex:1}.cpb{display:inline-flex;align-items:center;justify-content:center;flex:none;font:inherit;font-size:.9rem;line-height:1;background:transparent;border:1px solid var(--trait);border-radius:8px;padding:5px 8px;cursor:pointer;margin-top:4px;color:var(--texte)}.lig .cpb{margin-top:0}.cpb:hover,.cpb:active{border-color:var(--miel);background:rgba(61,232,255,.12)}
 .copier:hover,.copier:active{border-color:var(--miel);background:rgba(61,232,255,.12)}
 .msg.erreur{border-color:#7a3340;color:#ffc9d1}
 .points{display:inline-flex;gap:5px;padding:4px 0}
 .points i{width:8px;height:8px;border-radius:50%;background:var(--miel);animation:rebond 1s infinite ease-in-out}
 .points i:nth-child(2){animation-delay:.15s}.points i:nth-child(3){animation-delay:.3s}
 @keyframes rebond{0%,80%,100%{transform:translateY(0);opacity:.4}40%{transform:translateY(-6px);opacity:1}}
-.idees{display:flex;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:8px;padding:0 20px 12px}.idees::-webkit-scrollbar{display:none}.idees{-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent);padding-right:40px}.idees button{flex:none;white-space:nowrap}
+.idees{position:relative;z-index:2;display:flex;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:8px;padding:0 20px 12px}.idees::-webkit-scrollbar{display:none}.idees{-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent);padding-right:40px}.idees button{flex:none;white-space:nowrap}
 .idees button{font:inherit;font-size:.86rem;color:var(--doux);background:transparent;border:1px solid var(--trait);border-radius:99px;padding:7px 13px;cursor:pointer}
 .idees button img.lg{height:18px;width:auto;vertical-align:middle;margin-right:5px}
 .idees button:hover{color:var(--miel);border-color:var(--miel)}
-.saisie{display:flex;gap:10px;padding:14px 16px;border-top:1px solid var(--trait);align-items:flex-end}
+.saisie{position:relative;z-index:2;background:var(--nuit2);display:flex;gap:10px;padding:14px 16px;border-top:1px solid var(--trait);align-items:flex-end}
 textarea{flex:1;resize:none;min-height:48px;max-height:150px;font:inherit;color:var(--texte);background:var(--nuit);border:1px solid var(--trait);border-radius:14px;padding:12px 14px}
 textarea::placeholder{color:#5d6aa0}
 textarea:focus-visible{outline:none;border-color:var(--miel);box-shadow:0 0 0 2px rgba(61,232,255,.35)}
@@ -95,14 +95,14 @@ textarea:focus-visible{outline:none;border-color:var(--miel);box-shadow:0 0 0 2p
 .saisie{flex-wrap:wrap}
 .saisie textarea{flex:1 1 100%}
 .actions{display:flex;gap:8px;width:100%;align-items:center}
-.actions .ic{font:inherit;font-size:.85rem;color:var(--texte);background:transparent;border:1px solid var(--trait);border-radius:99px;padding:10px 12px;cursor:pointer;white-space:nowrap;margin:0;box-shadow:none}
+.actions .ic{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-width:42px;height:42px;font:inherit;font-size:.85rem;color:var(--texte);background:transparent;border:1px solid var(--trait);border-radius:99px;padding:10px 12px;cursor:pointer;white-space:nowrap;margin:0;box-shadow:none}
 .actions .ic[aria-pressed=true]{color:#2a0a1a;background:var(--menthe);border-color:var(--menthe);font-weight:700}
 .actions .btn{margin-left:auto;padding:11px 20px}
 #ecrire{padding:10px 12px;line-height:1}
 .chat.reduit .saisie textarea{display:none}
 .chat.reduit .compteur{display:none}
 .chat.reduit .fil{max-height:min(70vh,600px)}
-.chat.reduit #ecrire{transform:rotate(180deg)}
+#ecrire svg{transition:transform .25s}.chat.reduit #ecrire svg{transform:rotate(180deg)}.chat.reduit #ecrire{transform:none}.chat .fil{transition:max-height .25s ease}
 .compteur{font-size:.78rem;color:var(--doux);padding:0 20px 12px;text-align:right}
 .avert{font-size:.84rem;color:var(--doux);margin-top:14px}
 /* Cartes agents */
@@ -168,10 +168,10 @@ La Ruche IA
 <label class="sr" for="texte">Votre message</label>
 <textarea id="texte" maxlength="1500" rows="2" placeholder=""></textarea>
 <div class="actions" id="actions">
-<button type="button" class="ic voix" id="voix" aria-pressed="false" title="Faire parler l'agent">🔊<span class="lb"> Voix</span></button>
-<button class="ic micro" id="joindre" type="button" title="Joindre une capture d'écran">📎<span class="lb"> Joindre</span></button>
-<button class="ic micro" id="micro" type="button" aria-pressed="false" title="Parler au lieu d'écrire">🎤<span class="lb"> Parler</span></button>
-<button class="ic" id="ecrire" type="button" title="Afficher ou masquer la zone de texte" aria-expanded="true">⌄</button>
+<button type="button" class="ic voix" id="voix" aria-pressed="false" title="Faire parler l'agent"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg><span class="lb"> Voix</span></button>
+<button class="ic micro" id="joindre" type="button" title="Joindre une image" aria-label="Joindre une image"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.5l-8.6 8.6a5.5 5.5 0 0 1-7.8-7.8l8.9-8.9a3.7 3.7 0 0 1 5.2 5.2l-8.9 8.9a1.8 1.8 0 0 1-2.6-2.6l8-8"/></svg><span class="lb"> Joindre</span></button>
+<button class="ic micro" id="micro" type="button" aria-pressed="false" title="Parler au lieu d'écrire"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg><span class="lb"> Parler</span></button>
+<button class="ic" id="ecrire" type="button" title="Afficher ou masquer la zone de texte" aria-expanded="true" aria-label="Masquer ou afficher la zone de texte"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
 <button class="btn" id="envoyer" type="submit">Envoyer</button>
 </div>
 <input type="file" id="fichier" accept="image/*" class="sr" tabindex="-1" aria-hidden="true">
@@ -299,13 +299,14 @@ await audioCF.play();
 bv.addEventListener("click",function(){
 voixOn=!voixOn;
 bv.setAttribute("aria-pressed",voixOn?"true":"false");
-bv.innerHTML="🔊<span class=\"lb\"> Voix</span>";
+bv.innerHTML="<svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M11 5 6 9H3v6h3l5 4z\"/><path d=\"M15.5 8.5a5 5 0 0 1 0 7\"/><path d=\"M18.5 5.5a9 9 0 0 1 0 13\"/></svg><span class=\"lb\"> Voix</span>";
 if(voixOn){ parler("Bonjour, je suis "+courant.nom+". Je vous répondrai aussi à voix haute."); } else { arretVoix(); }
 });
 
 /* ---- Affichage ---- */
 function copierSecours(t){ var z=document.createElement("textarea"); z.value=t; z.setAttribute("readonly",""); z.style.position="fixed"; z.style.opacity="0"; document.body.appendChild(z); z.select(); try{ document.execCommand("copy"); }catch(e){} document.body.removeChild(z); }
-function boutonCopie(txt){ var cp=document.createElement("button"); cp.type="button"; cp.className="cpb"; cp.title="Copier"; cp.setAttribute("aria-label","Copier"); cp.textContent="📋"; cp.addEventListener("click",function(){ var ok=function(){ cp.textContent="✓"; setTimeout(function(){ cp.textContent="📋"; },1800); }; try{ if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(ok,function(){ copierSecours(txt); ok(); }); } else { copierSecours(txt); ok(); } }catch(e){ copierSecours(txt); ok(); } }); return cp; }
+var ICO_COPY="<svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"9\" y=\"9\" width=\"11\" height=\"11\" rx=\"2\"/><path d=\"M5 15V6a2 2 0 0 1 2-2h9\"/></svg>", ICO_OK="<svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12.5l4.5 4.5L19 7.5\"/></svg>";
+function boutonCopie(txt){ var cp=document.createElement("button"); cp.type="button"; cp.className="cpb"; cp.title="Copier"; cp.setAttribute("aria-label","Copier"); cp.innerHTML=ICO_COPY; cp.addEventListener("click",function(){ var ok=function(){ cp.innerHTML=ICO_OK; cp.title="Copié"; setTimeout(function(){ cp.innerHTML=ICO_COPY; cp.title="Copier"; },1800); }; try{ if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(ok,function(){ copierSecours(txt); ok(); }); } else { copierSecours(txt); ok(); } }catch(e){ copierSecours(txt); ok(); } }); return cp; }
 function netBloc(t){ return t.replace(/\*\*/g,"").replace(/^#+\s*/,"").trim(); }
 function blocsCopiables(d,contenu){
 d.textContent="";
@@ -324,7 +325,7 @@ blocs.forEach(function(bl){
   reste.forEach(function(l){ var r=document.createElement("div"); r.className="lig"; var t=l.replace(/^\s*\d+[.)]\s+/,"").replace(/^\*\*|\*\*$/g,"").replace(/^["«]\s*|\s*["»]$/g,""); var sp=document.createElement("span"); sp.textContent=l; r.appendChild(sp); if(!nonCop&&/^\s*\d+[.)]\s+/.test(l)) r.appendChild(boutonCopie(t)); div.appendChild(r); });
  } else if(reste.length){
   var txt=reste.join("\n").replace(/^\s+|\s+$/g,""); var p=document.createElement("div"); p.className="txt"; p.textContent=txt; div.appendChild(p);
-  if(!nonCop&&txt.length>=12) div.appendChild(boutonCopie(txt));
+  if(!nonCop&&txt.length>=25&&!/^(attention|avertissement|important|note\b|rappel|vérifiez|verifiez)/i.test(txt)) div.appendChild(boutonCopie(txt));
  }
  d.appendChild(div);
 });
@@ -417,7 +418,7 @@ return;
 }
 enCours=true; btn.disabled=true;
 idees.style.display="none";
-ajouter("moi",affiche+(img?"  📎 (capture jointe)":""));
+ajouter("moi",affiche+(img?"  (image jointe)":""));
 texte.value=""; nb.textContent="0"; retirerImage();
 var attente=document.createElement("div");
 attente.className="msg agent";
@@ -455,10 +456,10 @@ arretVoix();
 reco=new RA(); reco.lang="fr-FR"; reco.interimResults=true; reco.continuous=false;
 var base=texte.value?texte.value.trim()+" ":"";
 var entendu=false;
-reco.onstart=function(){ ecoute=true; bm.setAttribute("aria-pressed","true"); bm.innerHTML="🎤<span class=\"lb\"> J'écoute…</span>"; };
+reco.onstart=function(){ ecoute=true; bm.setAttribute("aria-pressed","true"); bm.innerHTML="<svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"9\" y=\"3\" width=\"6\" height=\"11\" rx=\"3\"/><path d=\"M5 11a7 7 0 0 0 14 0\"/><path d=\"M12 18v3\"/></svg><span class=\"lb\"> J'écoute…</span>"; };
 reco.onresult=function(e){ entendu=true; var t=""; for(var i=0;i<e.results.length;i++){ t+=e.results[i][0].transcript; } texte.value=(base+t).slice(0,1500); nb.textContent=texte.value.length; };
 reco.onerror=function(e){ if(e.error==="not-allowed"||e.error==="service-not-allowed"){ ajouter("agent erreur","Le micro est bloqué. Autorisez-le dans votre navigateur pour pouvoir me parler."); } };
-reco.onend=function(){ ecoute=false; bm.setAttribute("aria-pressed","false"); bm.innerHTML="🎤<span class=\"lb\"> Parler</span>"; texte.focus(); if(entendu&&texte.value.trim()&&!enCours){ dicte=true; envoyer(texte.value); } };
+reco.onend=function(){ ecoute=false; bm.setAttribute("aria-pressed","false"); bm.innerHTML="<svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"9\" y=\"3\" width=\"6\" height=\"11\" rx=\"3\"/><path d=\"M5 11a7 7 0 0 0 14 0\"/><path d=\"M12 18v3\"/></svg><span class=\"lb\"> Parler</span>"; texte.focus(); if(entendu&&texte.value.trim()&&!enCours){ dicte=true; envoyer(texte.value); } };
 try{ reco.start(); }catch(e){}
 });
 }
