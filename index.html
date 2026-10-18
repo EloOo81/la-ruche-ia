@@ -245,20 +245,20 @@ if(!synth) return;
 var u=new SpeechSynthesisUtterance(txt); u.lang="fr-FR"; if(voixChoisie) u.voice=voixChoisie;
 u.rate=1; u.pitch=1; synth.speak(u);
 }
-async function parler(t){
-if(!voixOn) return;
+async function parler(t,force){
+if(!voixOn&&!force) return;
 arretVoix();
 var txt=String(t).replace(/[•*#]/g,"").replace(/\n+/g,". ").trim();
 if(txt.length>700){ var c=txt.slice(0,700); var i=Math.max(c.lastIndexOf(". "),c.lastIndexOf("? "),c.lastIndexOf("! ")); txt=(i>200?c.slice(0,i+1):c); }
 try{
 var r=await fetch(URL_VOIX,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({texte:txt,agent:courant.id})});
 var j=await r.json();
-if(!voixOn) return;
+if(!voixOn&&!force) return;
 if(!j.audio) throw new Error("pas d'audio");
 audioCF=new Audio("data:audio/mpeg;base64,"+j.audio);
 audioCF.playbackRate=1; audioCF.preservesPitch=true;
 await audioCF.play();
-}catch(e){ if(voixOn) parlerNavigateur(txt); }
+}catch(e){ if(voixOn||force) parlerNavigateur(txt); }
 }
 bv.addEventListener("click",function(){
 voixOn=!voixOn;
@@ -339,7 +339,7 @@ async function envoyer(message){
 message=message.trim();
 if((!message&&!image)||enCours) return;
 if(!message) message="Voici une capture d'écran. Peux-tu l'analyser ?";
-var a=courant, img=image;
+var a=courant, img=image, vocal=dicte; dicte=false;
 if(!a.url){
 ajouter("moi",message); texte.value=""; nb.textContent="0";
 ajouter("agent erreur",a.nom+" arrive très bientôt. En attendant, Clarisse est déjà disponible pour vos questions de sécurité.");
@@ -362,7 +362,7 @@ var j=await r.json().catch(function(){return {};});
 attente.remove();
 if(r.ok&&j.reply){
 hist[a.id].push({r:"u",t:message},{r:"c",t:nettoyer(j.reply)});
-if(courant===a){ ajouter("agent",nettoyer(j.reply)); parler(j.reply); }
+if(courant===a){ ajouter("agent",nettoyer(j.reply)); parler(j.reply,vocal); }
 }
 else if(r.status===429){ ajouter("agent erreur","Trop de messages d'un coup. Patientez une minute puis réessayez."); }
 else if(r.status===413){ ajouter("agent erreur","Votre message est trop long (1500 caractères maximum). Collez seulement l'essentiel."); }
@@ -375,6 +375,7 @@ enCours=false; btn.disabled=false; texte.focus();
 }
 
 /* ---- Micro ---- */
+var dicte=false;
 var RA=window.SpeechRecognition||window.webkitSpeechRecognition, bm=document.getElementById("micro"), reco=null, ecoute=false;
 if(!RA){ bm.style.display="none"; }
 else{
@@ -383,10 +384,11 @@ if(ecoute){ reco.stop(); return; }
 arretVoix();
 reco=new RA(); reco.lang="fr-FR"; reco.interimResults=true; reco.continuous=false;
 var base=texte.value?texte.value.trim()+" ":"";
+var entendu=false;
 reco.onstart=function(){ ecoute=true; bm.setAttribute("aria-pressed","true"); bm.textContent="🎤 J'écoute…"; };
-reco.onresult=function(e){ var t=""; for(var i=0;i<e.results.length;i++){ t+=e.results[i][0].transcript; } texte.value=(base+t).slice(0,1500); nb.textContent=texte.value.length; };
+reco.onresult=function(e){ entendu=true; var t=""; for(var i=0;i<e.results.length;i++){ t+=e.results[i][0].transcript; } texte.value=(base+t).slice(0,1500); nb.textContent=texte.value.length; };
 reco.onerror=function(e){ if(e.error==="not-allowed"||e.error==="service-not-allowed"){ ajouter("agent erreur","Le micro est bloqué. Autorisez-le dans votre navigateur pour pouvoir me parler."); } };
-reco.onend=function(){ ecoute=false; bm.setAttribute("aria-pressed","false"); bm.textContent="🎤 Parler"; texte.focus(); };
+reco.onend=function(){ ecoute=false; bm.setAttribute("aria-pressed","false"); bm.textContent="🎤 Parler"; texte.focus(); if(entendu&&texte.value.trim()&&!enCours){ dicte=true; envoyer(texte.value); } };
 try{ reco.start(); }catch(e){}
 });
 }
