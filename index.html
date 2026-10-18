@@ -70,6 +70,7 @@ h2{font-size:clamp(1.5rem,4vw,2.1rem);margin-bottom:8px;letter-spacing:-.01em}
 .msg.agent{background:#182050;border:1px solid var(--trait);border-top-left-radius:4px;align-self:flex-start}
 .msg.moi{background:linear-gradient(90deg,var(--miel),var(--miel2));color:#06102b;font-weight:600;border-top-right-radius:4px;align-self:flex-end}
 .copier{display:block;margin-top:10px;font:inherit;font-size:.82rem;color:var(--texte);background:transparent;border:1px solid var(--trait);border-radius:99px;padding:6px 14px;cursor:pointer}
+.bloc{margin:0 0 12px}.bloc .lbl{font-weight:700;font-size:.82rem;opacity:.75;margin-bottom:3px}.bloc .txt{white-space:pre-wrap}.bloc .lig{display:flex;gap:8px;align-items:flex-start;margin:4px 0}.bloc .lig span{flex:1}.cpb{flex:none;font:inherit;font-size:.9rem;line-height:1;background:transparent;border:1px solid var(--trait);border-radius:8px;padding:5px 8px;cursor:pointer;margin-top:4px;color:var(--texte)}.lig .cpb{margin-top:0}.cpb:hover,.cpb:active{border-color:var(--miel);background:rgba(61,232,255,.12)}
 .copier:hover,.copier:active{border-color:var(--miel);background:rgba(61,232,255,.12)}
 .msg.erreur{border-color:#7a3340;color:#ffc9d1}
 .points{display:inline-flex;gap:5px;padding:4px 0}
@@ -303,11 +304,35 @@ if(voixOn){ parler("Bonjour, je suis "+courant.nom+". Je vous répondrai aussi �
 
 /* ---- Affichage ---- */
 function copierSecours(t){ var z=document.createElement("textarea"); z.value=t; z.setAttribute("readonly",""); z.style.position="fixed"; z.style.opacity="0"; document.body.appendChild(z); z.select(); try{ document.execCommand("copy"); }catch(e){} document.body.removeChild(z); }
+function boutonCopie(txt){ var cp=document.createElement("button"); cp.type="button"; cp.className="cpb"; cp.title="Copier"; cp.setAttribute("aria-label","Copier"); cp.textContent="📋"; cp.addEventListener("click",function(){ var ok=function(){ cp.textContent="✓"; setTimeout(function(){ cp.textContent="📋"; },1800); }; try{ if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(ok,function(){ copierSecours(txt); ok(); }); } else { copierSecours(txt); ok(); } }catch(e){ copierSecours(txt); ok(); } }); return cp; }
+function netBloc(t){ return t.replace(/\*\*/g,"").replace(/^#+\s*/,"").trim(); }
+function blocsCopiables(d,contenu){
+d.textContent="";
+var blocs=contenu.split(/\n\s*\n/), nonCop=false;
+blocs.forEach(function(bl){
+ var lignes=bl.replace(/^\s+|\s+$/g,"").split("\n"); if(!lignes[0]) return;
+ var div=document.createElement("div"); div.className="bloc";
+ var prem=netBloc(lignes[0]), label=null, reste=lignes.slice(), m=prem.match(/^([^:]{2,45}):\s*(.*)$/);
+ var tousMaj=prem.length<45&&prem===prem.toUpperCase()&&/[A-ZÉÈ]{3}/.test(prem);
+ if(m||tousMaj){ label=m?m[1]:prem; nonCop=/conseil|tendance|astuce|rappel|préféré|preferé|astuces/i.test(label)||/^mon pr/i.test(prem); reste=m&&m[2]?[m[2]].concat(lignes.slice(1)):lignes.slice(1); }
+ else if(/^mon pr[ée]f[ée]r[ée]/i.test(prem)){ nonCop=true; }
+ var tit=document.createElement("div"); 
+ if(label){ tit.className="lbl"; tit.textContent=label+(m?" :":""); div.appendChild(tit); }
+ var num=reste.filter(function(l){ return /^\s*\d+[.)]\s+/.test(l); });
+ if(num.length>=3&&num.length>=reste.length-1){
+  reste.forEach(function(l){ var r=document.createElement("div"); r.className="lig"; var t=l.replace(/^\s*\d+[.)]\s+/,"").replace(/^\*\*|\*\*$/g,"").replace(/^["«]\s*|\s*["»]$/g,""); var sp=document.createElement("span"); sp.textContent=l; r.appendChild(sp); if(!nonCop&&/^\s*\d+[.)]\s+/.test(l)) r.appendChild(boutonCopie(t)); div.appendChild(r); });
+ } else if(reste.length){
+  var txt=reste.join("\n").replace(/^\s+|\s+$/g,""); var p=document.createElement("div"); p.className="txt"; p.textContent=txt; div.appendChild(p);
+  if(!nonCop&&txt.length>=12) div.appendChild(boutonCopie(txt));
+ }
+ d.appendChild(div);
+});
+}
 function ajouter(classe, contenu){
 var d=document.createElement("div");
 d.className="msg "+classe;
 d.textContent=contenu;
-if(classe==="agent"&&contenu.length>150&&["leo","hugo","lina","theo"].indexOf(courant.id)>-1){ var cp=document.createElement("button"); cp.type="button"; cp.className="copier"; cp.textContent="📋 Copier"; cp.addEventListener("click",function(){ var ok=function(){ cp.textContent="✓ Copié"; setTimeout(function(){ cp.textContent="📋 Copier"; },2000); }; try{ if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(contenu).then(ok,function(){ copierSecours(contenu); ok(); }); } else { copierSecours(contenu); ok(); } }catch(e){ copierSecours(contenu); ok(); } }); d.appendChild(cp); }
+if(classe==="agent"&&contenu.length>150&&["leo","hugo","lina","theo"].indexOf(courant.id)>-1){ blocsCopiables(d,contenu); }
 fil.appendChild(d);
 fil.scrollTop=fil.scrollHeight;
 return d;
